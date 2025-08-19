@@ -2,10 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ProblemListItem } from '../../../shared/models/problem.model';
+import { PaginatedProblemsResponse, ProblemListItem } from '../../../shared/models/problem.model';
 import { Project } from '../../../shared/models/project.model';
 import { ProblemService } from '../../../shared/services/problem.service';
 import { ProjectService } from '../../../shared/services/project.service';
+
+type ExtractedProblemsData = {
+  problems: ProblemListItem[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+};
 
 @Component({
   selector: 'app-problem-list',
@@ -38,20 +45,39 @@ export class ProblemListComponent implements OnInit {
   // Make Math available in template
   Math = Math;
 
+  // Utility to extract problems and pagination from backend response
+  private extractProblemsData(data: PaginatedProblemsResponse): ExtractedProblemsData {
+    let problems: ProblemListItem[] = [];
+    if (Array.isArray((data as any).Problems)) {
+      problems = (data as any).Problems;
+    } else if (Array.isArray((data as any).problems)) {
+      problems = (data as any).problems;
+    } else if (Array.isArray((data as any).items)) {
+      problems = (data as any).items;
+    } else if (Array.isArray((data as any).Page)) {
+      problems = (data as any).Page;
+    }
+    const totalCount = data.TotalCount ?? data.totalCount ?? data.totalCount ?? 0;
+    const totalPages = data.TotalPages ?? data.totalPages ?? 0;
+    const currentPage = data.Page ?? data.page ?? data.currentPage ?? 1;
+    return { problems, totalCount, totalPages, currentPage };
+  }
+
   constructor(
     private problemService: ProblemService,
     private projectService: ProjectService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
-
   ngOnInit(): void {
     // Check if this is a project-specific problems page
     this.route.params.subscribe(params => {
       if (params['projectId']) {
         this.projectId = +params['projectId'];
+        console.log('ngOnInit: projectId detected', this.projectId);
         this.loadProject();
       } else {
+        console.log('ngOnInit: no projectId, loading all problems');
         this.loadProblems();
       }
     });
@@ -95,15 +121,17 @@ export class ProblemListComponent implements OnInit {
       filters.assignedTo = +this.selectedAssignee;
     }
 
+    console.log('loadProblems: filters', filters);
     this.problemService.getProblems(this.currentPage, this.pageSize, filters).subscribe({
       next: (response) => {
+        console.log('loadProblems: API response', response);
         this.loading = false;
         if (response.success && response.data) {
-          // Backend returns 'Problems' property, not 'items'
-          this.problems = response.data.Problems || response.data.items || [];
-          this.totalCount = response.data.totalCount || response.data.TotalCount || 0;
-          this.totalPages = response.data.totalPages || response.data.TotalPages || 0;
-          this.currentPage = response.data.currentPage || response.data.Page || 1;
+          const { problems, totalCount, totalPages, currentPage } = this.extractProblemsData(response.data);
+          this.problems = problems;
+          this.totalCount = totalCount;
+          this.totalPages = totalPages;
+          this.currentPage = currentPage;
         } else {
           this.error = response.message || 'Failed to load problems';
           this.problems = [];
@@ -113,7 +141,7 @@ export class ProblemListComponent implements OnInit {
         console.error('Error loading problems:', error);
         this.loading = false;
         this.error = 'Failed to load problems. Please check your connection and try again.';
-        this.problems = []; // Ensure problems is always an array
+        this.problems = [];
       }
     });
   }
@@ -167,6 +195,9 @@ export class ProblemListComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
+    if (!status || typeof status !== 'string') {
+      return 'status-open';
+    }
     switch (status.toLowerCase()) {
       case 'open': return 'status-open';
       case 'inprogress': return 'status-progress';

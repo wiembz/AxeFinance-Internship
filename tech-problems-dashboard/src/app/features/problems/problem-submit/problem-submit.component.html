@@ -71,7 +71,7 @@
     <!-- Form Card -->
     <div class="form-card" *ngIf="!loading">
       <form [formGroup]="problemForm" (ngSubmit)="onSubmit()" class="problem-form">
-        
+
         <!-- Basic Information Section -->
         <section class="form-section">
           <div class="section-header">
@@ -85,7 +85,7 @@
             </h3>
             <p class="section-description">Provide essential information about your problem</p>
           </div>
-          
+
           <div class="form-grid">
             <!-- Title Field -->
             <div class="form-group full-width">
@@ -148,7 +148,7 @@
             </h3>
             <p class="section-description">Select the relevant department and project</p>
           </div>
-          
+
           <div class="form-grid">
             <!-- Department Field -->
             <div class="form-group">
@@ -208,7 +208,7 @@
             </h3>
             <p class="section-description">Add relevant tags to help categorize your problem</p>
           </div>
-          
+
           <div class="form-grid">
             <div class="form-group full-width">
               <label class="form-label">Select Relevant Tags</label>
@@ -285,7 +285,7 @@
             </h3>
             <p class="section-description">Upload screenshots, logs, or other relevant files</p>
           </div>
-          
+
           <div class="form-grid">
             <div class="form-group full-width">
               <label class="form-label">Upload Files (Optional)</label>
@@ -331,14 +331,14 @@
                       <div class="file-size">{{ formatFileSize(file.size) }}</div>
                     </div>
                   </div>
-                  
+
                   <div class="file-preview" *ngIf="file.type.startsWith('image/')">
                     <img [src]="getFilePreview(file)" alt="Preview" class="file-preview-image" />
                   </div>
-                  
-                  <button 
-                    type="button" 
-                    class="file-remove-btn" 
+
+                  <button
+                    type="button"
+                    class="file-remove-btn"
                     (click)="removeFile(i)"
                     aria-label="Remove file"
                   >
@@ -361,9 +361,9 @@
               </span>
               Clear Form
             </button>
-            <button 
-              type="submit" 
-              class="btn btn-primary" 
+            <button
+              type="submit"
+              class="btn btn-primary"
               [disabled]="problemForm.invalid || submitting"
             >
               <span *ngIf="submitting" class="btn-spinner">

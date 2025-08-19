@@ -49,6 +49,7 @@ builder.Services.AddCustomAuthorization();
 
 builder.Services.AddCors(options =>
 {
+    // Make sure localhost:4200 is included for Angular development
     options.AddPolicy("AllowAngular", policy =>
     {
         if (builder.Environment.IsDevelopment())

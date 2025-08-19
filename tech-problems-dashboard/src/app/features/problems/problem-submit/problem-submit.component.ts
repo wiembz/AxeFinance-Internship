@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DepartmentListItem } from '../../../shared/models/department.model';
@@ -33,7 +33,8 @@ export class ProblemSubmitComponent implements OnInit {
     private problemService: ProblemService,
     private departmentService: DepartmentService,
     private projectService: ProjectService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -119,6 +120,7 @@ export class ProblemSubmitComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files) {
       this.selectedFiles = Array.from(target.files);
+      setTimeout(() => this.cdr.detectChanges()); // Ensure change detection after file update
     }
   }
 

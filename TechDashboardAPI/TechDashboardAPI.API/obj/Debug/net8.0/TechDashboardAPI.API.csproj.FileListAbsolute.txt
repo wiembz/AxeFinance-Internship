@@ -303,3 +303,4 @@ C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.genruntimeconfig.cache
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\ref\TechDashboardAPI.API.dll
 c:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\appsettings.Production.json
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.sourcelink.json

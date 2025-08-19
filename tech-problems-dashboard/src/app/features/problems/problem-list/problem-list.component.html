@@ -132,15 +132,15 @@
         <div class="card-body">
           <div class="problem-stats">
             <div class="stat-item">
-              <div class="stat-value">High</div>
+              <div class="stat-value">{{ problem.priority || 'N/A' }}</div>
               <div class="stat-label">Priority</div>
             </div>
-            <div class="stat-item" *ngIf="problem.assignedToName">
-              <div class="stat-value">{{ problem.assignedToName }}</div>
+            <div class="stat-item">
+              <div class="stat-value">{{ problem.assignedToName || 'Unassigned' }}</div>
               <div class="stat-label">Assigned To</div>
             </div>
           </div>
-          <p class="problem-description">{{ problem.description }}</p>
+          <p class="problem-description">{{ problem.description || 'No description provided.' }}</p>
         </div>
 
         <!-- Card Footer -->
@@ -154,7 +154,7 @@
             </span>
           </div>
           <div class="problem-actions">
-            <button class="action-btn primary" (click)="viewProblem(problem.id)" title="View problem">
+            <button class="action-btn primary" (click)="viewProblem(problem.id)" title="View problem" [attr.aria-label]="'View details for ' + (problem.title || 'problem')">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
               </svg>

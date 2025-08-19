@@ -74,10 +74,12 @@ export interface ProblemListItem {
   isActive: boolean;
   canEdit: boolean;
   canDelete: boolean;
+  priority?: string;
 }
 
 export interface PaginatedProblemsResponse {
   Problems?: ProblemListItem[]; // Backend uses 'Problems'
+  problems?: ProblemListItem[]; // Some APIs use 'problems' (lowercase)
   items?: ProblemListItem[];    // Fallback for other APIs that might use 'items'
   totalCount: number;
   TotalCount?: number; // Backend uses 'TotalCount'
@@ -85,6 +87,7 @@ export interface PaginatedProblemsResponse {
   TotalPages?: number; // Backend uses 'TotalPages'
   currentPage: number;
   Page?: number;       // Backend uses 'Page'
+  page?: number;       // Some APIs use 'page' (lowercase)
   pageSize: number;
   PageSize?: number;   // Backend uses 'PageSize'
 }

@@ -20,3 +20,4 @@ C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Domain\obj\Debug\net8.0\refint\TechDashboardAPI.Domain.dll
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Domain\obj\Debug\net8.0\TechDashboardAPI.Domain.pdb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Domain\obj\Debug\net8.0\ref\TechDashboardAPI.Domain.dll
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Domain\obj\Debug\net8.0\TechDashboardAPI.Domain.sourcelink.json
