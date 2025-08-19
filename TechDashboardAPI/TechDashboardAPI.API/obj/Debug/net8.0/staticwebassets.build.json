@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "SvHkflmqCRF50F3BugJ8HFekFPzOxeTsEcNaV4pGgow=",
+  "Source": "TechDashboardAPI.API",
+  "BasePath": "_content/TechDashboardAPI.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "TechDashboardAPI.API\\wwwroot",
+      "Source": "TechDashboardAPI.API",
+      "ContentRoot": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\",
+      "BasePath": "_content/TechDashboardAPI.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

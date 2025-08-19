@@ -1,0 +1,276 @@
+<!-- Professional Problems Dashboard -->
+<div class="problems-dashboard">
+
+  <!-- Elegant Header Section -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zM12 15.4l3.76 2-1-4.28 3.32-2.88-4.38-.38L12 6.1l-1.7 3.76-4.38.38 3.32 2.88-1 4.28L12 15.4z"/>
+        </svg>
+      </div>
+      <div class="brand-content">
+        <h1 class="brand-title" *ngIf="project">{{ project.name }} Problems</h1>
+        <h1 class="brand-title" *ngIf="!project">Problems Dashboard</h1>
+        <p class="brand-subtitle" *ngIf="project">Track and manage problems for {{ project.name }}</p>
+        <p class="brand-subtitle" *ngIf="!project">Track and manage technical problems</p>
+      </div>
+    </div>
+
+    <!-- Professional Controls -->
+    <div class="header-controls">
+      <div class="control-group">
+        <div class="search-control">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search problems..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            #searchInput>
+          <button class="clear-button" *ngIf="searchTerm" (click)="clearFilters()" title="Clear search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="filter-control">
+          <select [(ngModel)]="selectedStatus" (change)="onStatusFilter(selectedStatus)" class="status-filter">
+            <option value="">All Statuses</option>
+            <option value="Open">Open</option>
+            <option value="InProgress">In Progress</option>
+            <option value="UnderReview">Under Review</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <button class="secondary-action refresh-btn" (click)="onRefresh()" title="Refresh">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          <span>Refresh</span>
+        </button>
+        <a routerLink="/problems/submit" class="primary-action">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          <span>Submit Problem</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Area -->
+  <main class="problems-content">
+    <!-- Loading State -->
+    <div class="content-state loading-state" *ngIf="loading">
+      <div class="state-visual">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>Loading Problems</h3>
+        <p>Please wait while we fetch the problem data...</p>
+      </div>
+    </div>
+
+    <!-- Problems Grid View -->
+    <div class="problems-grid"
+         *ngIf="!loading && problems.length > 0 && !error">
+      <article class="problem-card"
+               *ngFor="let problem of problems; trackBy: trackByProblemId">
+
+        <!-- Card Header -->
+        <header class="card-header">
+          <div class="problem-identity">
+            <div class="problem-avatar">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div class="problem-info">
+              <h3 class="problem-name">{{ problem.title }}</h3>
+              <div class="problem-status">
+                <span class="status-indicator" [class]="getStatusClass(problem.status)"></span>
+                <span class="status-text">{{ formatStatus(problem.status) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-menu">
+            <button class="menu-toggle" (click)="toggleCardMenu(problem.id)" title="Options">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+              </svg>
+            </button>
+            <div class="card-dropdown" *ngIf="activeCardMenu === problem.id">
+              <button class="dropdown-item" (click)="viewProblem(problem.id)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+                View Details
+              </button>
+              <button class="dropdown-item" (click)="editProblem(problem.id)" *ngIf="canEditProblem(problem)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+                Edit Problem
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="problem-stats">
+            <div class="stat-item">
+              <div class="stat-value">High</div>
+              <div class="stat-label">Priority</div>
+            </div>
+            <div class="stat-item" *ngIf="problem.assignedToName">
+              <div class="stat-value">{{ problem.assignedToName }}</div>
+              <div class="stat-label">Assigned To</div>
+            </div>
+          </div>
+          <p class="problem-description">{{ problem.description }}</p>
+        </div>
+
+        <!-- Card Footer -->
+        <footer class="card-footer">
+          <div class="problem-meta">
+            <span class="problem-date">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+              </svg>
+              {{ problem.createdDate | date:'short' }}
+            </span>
+          </div>
+          <div class="problem-actions">
+            <button class="action-btn primary" (click)="viewProblem(problem.id)" title="View problem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- Empty State -->
+    <div class="content-state empty-state" *ngIf="!loading && problems.length === 0 && !error">
+      <div class="state-visual">
+        <div class="empty-illustration">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3 *ngIf="project">No problems found for {{ project.name }}</h3>
+        <h3 *ngIf="!project">No problems found</h3>
+        <p *ngIf="searchTerm || selectedStatus">Try adjusting your filters or search terms.</p>
+        <p *ngIf="!searchTerm && !selectedStatus">Get started by reporting your first problem.</p>
+        <a routerLink="/problems/submit" class="primary-action">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          <span>Submit Problem</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="content-state error-state" *ngIf="error && !loading">
+      <div class="state-visual">
+        <div class="error-illustration">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>Failed to load problems</h3>
+        <p class="error-message">{{ error }}</p>
+        <button class="retry-btn secondary-action" (click)="onRefresh()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          <span>Try Again</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Professional Pagination -->
+  <nav class="pagination-container"
+       *ngIf="totalPages > 1 && !loading && !error && problems.length > 0"
+       aria-label="Problems pagination">
+
+    <div class="pagination-info">
+      <span class="results-count">
+        Showing <strong>{{ getStartRecord() }}-{{ getEndRecord() }}</strong> of <strong>{{ totalCount }}</strong> problems
+      </span>
+    </div>
+
+    <div class="pagination-controls">
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(1)"
+              [disabled]="currentPage === 1"
+              [attr.aria-label]="'Go to first page'"
+              title="First page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6 1.41-1.41zM6 6h2v12H6V6z"/>
+        </svg>
+      </button>
+
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              [attr.aria-label]="'Go to previous page'"
+              title="Previous page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+      </button>
+
+      <div class="page-numbers">
+        <button *ngFor="let page of getPaginationArray()"
+                class="page-btn"
+                [class.active]="page === currentPage"
+                (click)="onPageChange(page)"
+                [attr.aria-label]="'Go to page ' + page">
+          {{ page }}
+        </button>
+      </div>
+
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              [attr.aria-label]="'Go to next page'"
+              title="Next page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </svg>
+      </button>
+
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(totalPages)"
+              [disabled]="currentPage === totalPages"
+              [attr.aria-label]="'Go to last page'"
+              title="Last page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6-1.41 1.41zM16 6h2v12h-2V6z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+</div>

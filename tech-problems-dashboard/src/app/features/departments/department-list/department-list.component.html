@@ -1,0 +1,268 @@
+<!-- Professional Departments Dashboard -->
+<div class="departments-dashboard">
+
+  <!-- Elegant Header Section -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+        </svg>
+      </div>
+      <div class="brand-content">
+        <h1 class="brand-title">Departments</h1>
+        <p class="brand-subtitle">Manage organizational structures</p>
+      </div>
+    </div>
+
+    <!-- Professional Controls -->
+    <div class="header-controls">
+      <div class="control-group">
+        <div class="search-control">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search departments..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            #searchInput>
+          <button class="clear-button" *ngIf="searchTerm" (click)="clearSearch()" title="Clear search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="view-toggle">
+          <button class="toggle-button" [class.active]="viewMode === 'grid'" (click)="setViewMode('grid')" title="Grid View">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+            </svg>
+          </button>
+          <button class="toggle-button" [class.active]="viewMode === 'list'" (click)="setViewMode('list')" title="List View">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="action-group" *ngIf="canManageDepartments">
+        <a [routerLink]="['/admin/departments/create']" class="primary-action">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          <span>New Department</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Area -->
+  <main class="departments-content">
+    <!-- Loading State -->
+    <div class="content-state loading-state" *ngIf="loading">
+      <div class="state-visual">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>Loading Departments</h3>
+        <p>Please wait while we fetch the department data...</p>
+      </div>
+    </div>
+
+    <!-- Departments Grid View -->
+    <div class="departments-grid"
+         *ngIf="!loading && departments.length > 0 && viewMode === 'grid'">
+      <article class="department-card"
+               *ngFor="let dept of departments; trackBy: trackByDepartment"
+               (click)="viewDepartmentProjects(dept)"
+               tabindex="0"
+               role="button"
+               [attr.aria-label]="'View projects for ' + dept.name + ' department'"
+               (keydown.enter)="viewDepartmentProjects(dept)"
+               (keydown.space)="viewDepartmentProjects(dept)">
+
+        <!-- Card Header -->
+        <header class="card-header">
+          <div class="department-identity">
+            <div class="department-avatar">
+              <span class="avatar-text">{{ getAvatarText(dept.name) }}</span>
+            </div>
+            <div class="department-info">
+              <h3 class="department-name">{{ dept.name }}</h3>
+            </div>
+          </div>
+
+          <div class="card-menu" *ngIf="canManageDepartments" (click)="$event.stopPropagation()">
+            <button class="menu-toggle" (click)="toggleCardMenu(dept.id)" title="Department options">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+              </svg>
+            </button>
+            <div class="card-dropdown" *ngIf="activeCardMenu === dept.id">
+              <a [routerLink]="['/admin/departments/edit', dept.id]" class="dropdown-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+                Edit Department
+              </a>
+              <button class="dropdown-item danger" (click)="confirmDelete(dept)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+                Delete Department
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <p class="department-description">
+            {{ dept.description || 'No description provided for this department.' }}
+          </p>
+
+          <div class="department-stats">
+            <div class="stat-item">
+              <div class="stat-value">{{ dept.projectCount || 0 }}</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">{{ dept.userCount || 0 }}</div>
+              <div class="stat-label">Members</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Footer -->
+        <footer class="card-footer">
+          <div class="department-actions">
+            <div class="click-hint">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+              <span>Click to view projects</span>
+            </div>
+            <span class="creation-date">Created {{ formatDate(dept.createdDate) }}</span>
+          </div>
+        </footer>
+      </article>
+    </div>
+
+    <!-- Empty State -->
+    <div class="content-state empty-state" *ngIf="!loading && departments.length === 0 && !error">
+      <div class="state-visual">
+        <div class="empty-illustration">
+          <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>No departments found</h3>
+        <p>Get started by creating your first department to organize your projects and team members.</p>
+        <a [routerLink]="['/admin/departments/create']"
+           class="create-btn primary-action"
+           *ngIf="canManageDepartments">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          <span>Create First Department</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="content-state error-state" *ngIf="error && !loading">
+      <div class="state-visual">
+        <div class="error-illustration">
+          <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>Failed to load departments</h3>
+        <p class="error-message">{{ error }}</p>
+        <button class="retry-btn secondary-action" (click)="loadDepartments()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          <span>Try Again</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Professional Pagination -->
+  <nav class="pagination-container"
+       *ngIf="totalPages > 1 && !loading && !error && departments.length > 0"
+       aria-label="Departments pagination">
+
+    <div class="pagination-info">
+      <span class="results-count">
+        Showing <strong>{{ getResultStart() }}-{{ getResultEnd() }}</strong> of <strong>{{ totalCount }}</strong> departments
+      </span>
+    </div>
+
+    <div class="pagination-controls">
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(1)"
+              [disabled]="currentPage === 1"
+              [attr.aria-label]="'Go to first page'"
+              title="First page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6 1.41-1.41zM6 6h2v12H6V6z"/>
+        </svg>
+      </button>
+
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              [attr.aria-label]="'Go to previous page'"
+              title="Previous page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+      </button>
+
+      <div class="page-numbers">
+        <button *ngFor="let page of getPaginationArray()"
+                class="page-btn number-btn"
+                [class.active]="page === currentPage"
+                (click)="onPageChange(page)"
+                [attr.aria-label]="'Go to page ' + page"
+                [attr.aria-current]="page === currentPage ? 'page' : null">
+          {{ page }}
+        </button>
+      </div>
+
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              [attr.aria-label]="'Go to next page'"
+              title="Next page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/>
+        </svg>
+      </button>
+
+      <button class="page-btn nav-btn"
+              (click)="onPageChange(totalPages)"
+              [disabled]="currentPage === totalPages"
+              [attr.aria-label]="'Go to last page'"
+              title="Last page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6-1.41 1.41zM16 6h2v12h-2V6z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+</div>

@@ -1,0 +1,267 @@
+<!-- Professional Project Form Dashboard -->
+<div class="project-form-dashboard">
+
+  <!-- Elegant Header Section -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 4H4c-1.11 0-2 .89-2 2v3h2V6h4V4zm6 0v2h4v3h2V6c0-1.11-.89-2-2-2h-4zm-6 15H4v-3H2v3c0 1.11.89 2 2 2h4v-2zm6 0v2h4c1.11 0 2-.89 2-2v-3h-2v3h-4z"/>
+        </svg>
+      </div>
+      <div class="brand-content">
+        <h1 class="brand-title">
+          {{ isEditMode ? 'Edit Project' : 'Create Project' }}
+        </h1>
+        <p class="brand-subtitle">
+          {{ isEditMode ? 'Update project information and settings' : 'Add a new project to the selected department' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation Breadcrumb -->
+    <div class="header-nav">
+      <nav class="breadcrumb">
+        <a [routerLink]="['/admin/departments']" class="breadcrumb-link">Departments</a>
+        <span class="breadcrumb-separator" *ngIf="preselectedDepartmentId || getDepartmentName()">/</span>
+        <a
+          *ngIf="preselectedDepartmentId"
+          [routerLink]="['/admin/departments', preselectedDepartmentId, 'projects']"
+          class="breadcrumb-link">{{ getDepartmentName() }} Projects</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">
+          {{ isEditMode ? 'Edit Project' : 'Create Project' }}
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Content Area -->
+  <main class="form-content">
+    <!-- Loading State -->
+    <div class="content-state loading-state" *ngIf="loading">
+      <div class="state-visual">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>Loading Project Details</h3>
+        <p>Please wait while we fetch the project information...</p>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="alert alert-success" *ngIf="success">
+      <div class="alert-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <div class="alert-content">
+        <h4>Success!</h4>
+        <p>{{ success }}</p>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-error" *ngIf="error">
+      <div class="alert-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+        </svg>
+      </div>
+      <div class="alert-content">
+        <h4>Error</h4>
+        <p>{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card" *ngIf="!loading">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="project-form">
+
+        <!-- Basic Information Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <span class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+              </span>
+              Project Details
+            </h3>
+            <p class="section-description">Provide essential information about your project</p>
+          </div>
+
+          <div class="form-grid">
+            <!-- Department Selection -->
+            <div class="form-group">
+              <label for="departmentId" class="form-label required">Department</label>
+              <ng-container *ngIf="preselectedDepartmentId && !isEditMode; else normalSelect">
+                <input
+                  type="text"
+                  class="form-control form-select"
+                  [value]="getDepartmentName()"
+                  disabled
+                  style="background: #f5f5f5; color: #333; font-weight: 500;" />
+              </ng-container>
+              <ng-template #normalSelect>
+                <select
+                  id="departmentId"
+                  formControlName="departmentId"
+                  class="form-control form-select"
+                  [class.error]="getFieldError('departmentId')"
+                  [disabled]="isEditMode">
+                  <option value="">Select a department...</option>
+                  <option
+                    *ngFor="let dept of departments"
+                    [value]="dept.id">
+                    {{ dept.name }}
+                  </option>
+                </select>
+              </ng-template>
+              <div *ngIf="preselectedDepartmentId && !isEditMode" class="field-hint department-locked">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 4px;">
+                  <path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7V7a6 6 0 0 0-12 0v3a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-8-3a4 4 0 0 1 8 0v3H6V7zm10 13H6v-8h12v8z"/>
+                </svg>
+                This project will be created under the <strong>{{ getDepartmentName() }}</strong> department.
+              </div>
+              <div class="field-error" *ngIf="getFieldError('departmentId')">
+                <span class="error-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                  </svg>
+                </span>
+                <span class="error-text">{{ getFieldError('departmentId') }}</span>
+              </div>
+            </div>
+
+            <!-- Name Field -->
+            <div class="form-group">
+              <label for="name" class="form-label required">Project Name</label>
+              <input
+                id="name"
+                type="text"
+                formControlName="name"
+                class="form-control"
+                [class.error]="getFieldError('name')"
+                placeholder="Enter project name">
+              <div class="field-hint">Choose a clear, descriptive name for the project</div>
+              <div class="field-error" *ngIf="getFieldError('name')">
+                <span class="error-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                  </svg>
+                </span>
+                <span class="error-text">{{ getFieldError('name') }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Description Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <span class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+              </span>
+              Project Description
+            </h3>
+            <p class="section-description">Describe the project's goals, scope, and requirements</p>
+          </div>
+
+          <div class="form-grid">
+            <!-- Description Field -->
+            <div class="form-group full-width">
+              <label for="description" class="form-label required">Description</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                class="form-control form-textarea"
+                [class.error]="getFieldError('description')"
+                placeholder="Describe the project's goals, scope, and requirements..."
+                rows="6"></textarea>
+              <div class="field-meta">
+                <span class="character-count">{{ form.get('description')?.value?.length || 0 }} / 2000 characters</span>
+              </div>
+              <div class="field-error" *ngIf="getFieldError('description')">
+                <span class="error-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                  </svg>
+                </span>
+                <span class="error-text">{{ getFieldError('description') }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Form Actions Section -->
+        <section class="form-actions">
+          <div class="actions-container">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="saving">
+              <span class="btn-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                </svg>
+              </span>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="form.invalid || saving"
+            >
+              <span *ngIf="saving" class="btn-spinner">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin">
+                  <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"/>
+                </svg>
+              </span>
+              <span *ngIf="!saving" class="btn-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                </svg>
+              </span>
+              {{ saving ? 'Saving...' : (isEditMode ? 'Update Project' : 'Create Project') }}
+            </button>
+          </div>
+        </section>
+
+      </form>
+    </div>
+
+    <!-- Form Info Panel -->
+    <div class="info-panel">
+      <div class="info-section">
+        <h3>Project Guidelines</h3>
+        <ul>
+          <li>Choose a clear, descriptive name for the project</li>
+          <li>Provide detailed description of project goals and scope</li>
+          <li>Project names must be unique within the department</li>
+          <li>Projects help organize problems and solutions by area</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <h3>After Creation</h3>
+        <ul>
+          <li>Users can report problems specific to this project</li>
+          <li>Contributors can suggest solutions to problems</li>
+          <li>Admins can manage project settings and members</li>
+          <li>Track progress through problem resolution metrics</li>
+        </ul>
+      </div>
+
+      <div class="info-section" *ngIf="preselectedDepartmentId">
+        <h3>Department Context</h3>
+        <p>This project will be created under the <strong>{{ getDepartmentName() }}</strong> department.</p>
+        <p>Department members will be able to access and contribute to this project based on their roles.</p>
+      </div>
+    </div>
+  </main>
+</div>

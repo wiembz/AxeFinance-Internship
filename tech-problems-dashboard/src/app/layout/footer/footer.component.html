@@ -1,0 +1,67 @@
+<footer class="app-footer" role="contentinfo">
+  <div class="footer-content">
+    <!-- Left Section -->
+    <div class="footer-left">
+      <div class="footer-brand">
+        <span class="brand-name">ProblemStack</span>
+        <span class="brand-version">v1</span>
+      </div>
+      <div class="footer-description">
+        Streamlining technical problem resolution across departments
+      </div>
+    </div>
+
+    <!-- Center Section -->
+    <div class="footer-center">
+      <nav class="footer-nav" role="navigation" aria-label="Footer navigation">
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <span class="separator">•</span>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <span class="separator">•</span>
+        <a href="#" class="footer-link">Support</a>
+        <span class="separator">•</span>
+        <a href="#" class="footer-link">Documentation</a>
+      </nav>
+    </div>
+
+    <!-- Right Section -->
+    <div class="footer-right">
+      <div class="footer-stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ totalProblems }}</span>
+          <span class="stat-label">Problems Resolved</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ activeDepartments }}</span>
+          <span class="stat-label">Active Departments</span>
+        </div>
+      </div>
+
+      <div class="footer-copyright">
+        <span>© {{ currentYear }} AxeFinance. All rights reserved.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-indicators">
+      <div class="status-item" [class.online]="systemStatus.api" title="API Status">
+        <div class="status-dot"></div>
+        <span>API</span>
+      </div>
+      <div class="status-item" [class.online]="systemStatus.database" title="Database Status">
+        <div class="status-dot"></div>
+        <span>Database</span>
+      </div>
+      <div class="status-item" [class.online]="systemStatus.auth" title="Authentication Status">
+        <div class="status-dot"></div>
+        <span>Auth</span>
+      </div>
+    </div>
+
+    <div class="build-info">
+      Build:  ({{ buildInfo.date }})
+    </div>
+  </div>
+</footer>

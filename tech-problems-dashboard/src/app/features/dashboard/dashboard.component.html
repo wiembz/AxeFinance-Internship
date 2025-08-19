@@ -1,0 +1,71 @@
+<div class="dashboard">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Welcome, {{ (auth.currentUser$ | async)?.username || 'User' }}</h1>
+    <p class="dashboard-subtitle">Role: {{ (auth.currentUser$ | async)?.role || 'User' }}</p>
+  </div>
+
+  <!-- Admin Section -->
+  <div *ngIf="isAdmin | async" class="admin-section">
+    <div class="admin-header">
+      <h2 class="admin-title">Administration</h2>
+      <p class="admin-description">Manage departments, projects, and system settings</p>
+    </div>
+
+    <div class="admin-grid">
+      <a [routerLink]="['/admin/departments']" class="admin-card">
+        <div class="admin-card-icon">🏢</div>
+        <h3 class="admin-card-title">Department Management</h3>
+        <p class="admin-card-description">Create, edit, and manage departments across the organization</p>
+      </a>
+
+      <a [routerLink]="['/admin/projects']" class="admin-card">
+        <div class="admin-card-icon">📁</div>
+        <h3 class="admin-card-title">Project Management</h3>
+        <p class="admin-card-description">Oversee projects and their progress across all departments</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Overview Section -->
+  <div class="overview-section">
+    <div class="section-header">
+      <h2 class="section-title">Dashboard Overview</h2>
+    </div>
+
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="card-content">
+          <div class="card-icon">🔧</div>
+          <div class="card-info">
+            <h3 class="card-title">Problems Overview</h3>
+            <p class="card-description">Track and manage technical problems across departments</p>
+            <span class="card-status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <div class="card-content">
+          <div class="card-icon">💡</div>
+          <div class="card-info">
+            <h3 class="card-title">Solutions Overview</h3>
+            <p class="card-description">Browse and implement proven solutions</p>
+            <span class="card-status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <div class="card-content">
+          <div class="card-icon">📈</div>
+          <div class="card-info">
+            <h3 class="card-title">Analytics Dashboard</h3>
+            <p class="card-description">View performance metrics and insights</p>
+            <span class="card-status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

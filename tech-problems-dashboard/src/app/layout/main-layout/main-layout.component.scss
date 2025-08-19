@@ -1,0 +1,241 @@
+/* Enhanced Main Layout with Modern Design System */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header Section */
+.layout-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-fixed);
+  flex-shrink: 0;
+}
+
+/* Main Body Section */
+.layout-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sidebar Section */
+.layout-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: var(--z-sticky);
+  transition: transform var(--transition-normal);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-light);
+  box-shadow: var(--card-shadow-md);
+}
+
+/* Main Content Area */
+.layout-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px; /* Refined sidebar width */
+  margin-top: 0; /* Remove margin-top since header is sticky */
+  min-height: 100vh; /* Full height */
+  background: var(--bg-lightest);
+  transition: margin-left var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sidebar Collapsed State - Synchronization */
+.sidebar-collapsed .layout-content {
+  margin-left: 72px; /* Refined collapsed sidebar width */
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: var(--space-xl);
+  padding-top: calc(70px + var(--space-xl)); /* Fixed header height + padding */
+  max-width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Footer Section */
+.layout-footer {
+  position: relative;
+  z-index: var(--z-dropdown);
+  flex-shrink: 0;
+  margin-left: 260px;
+  transition: margin-left var(--transition-normal);
+}
+
+/* Collapsed Sidebar State */
+.layout.sidebar-collapsed {
+  .layout-content {
+    margin-left: 72px; /* Refined collapsed sidebar width */
+  }
+
+  .layout-footer {
+    margin-left: 72px;
+  }
+}
+
+/* Content Overlay for Mobile */
+.content-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-overlay);
+  z-index: calc(var(--z-sticky) - 1);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  animation: fadeIn var(--transition-fast) ease-out forwards;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .layout-content {
+    margin-left: 260px;
+  }
+
+  .layout-footer {
+    margin-left: 260px;
+  }
+
+  .layout.sidebar-collapsed {
+    .layout-content {
+      margin-left: 72px;
+    }
+
+    .layout-footer {
+      margin-left: 72px;
+    }
+  }
+
+  .content-wrapper {
+    padding: var(--space-lg);
+    padding-top: calc(70px + var(--space-lg)); /* Fixed header height + padding */
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-content {
+    margin-left: 0;
+    margin-top: 0;
+    min-height: 100vh;
+  }
+
+  .layout-footer {
+    margin-left: 0;
+  }
+
+  .layout.sidebar-collapsed {
+    .layout-content,
+    .layout-footer {
+      margin-left: 0;
+    }
+  }
+
+  .layout-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .layout:not(.sidebar-collapsed) .layout-sidebar {
+    transform: translateX(0);
+  }
+
+  .content-wrapper {
+    padding: var(--space-md);
+    padding-top: calc(60px + var(--space-md)); /* Mobile header height + padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: var(--space-sm);
+    padding-top: calc(60px + var(--space-sm)); /* Mobile header height + padding */
+  }
+
+  .layout-content {
+    min-height: 100vh;
+  }
+}
+
+/* Smooth transitions for layout changes */
+.layout * {
+  transition: margin var(--transition-normal),
+              padding var(--transition-normal),
+              transform var(--transition-normal);
+}
+
+/* Enhanced scrollbar for content */
+.content-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-wrapper::-webkit-scrollbar-track {
+  background: var(--bg-light);
+  border-radius: var(--radius-sm);
+}
+
+.content-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--border-dark);
+}
+
+/* Focus management for accessibility */
+.layout-content:focus {
+  outline: none;
+}
+
+.layout-content:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Global body class for sidebar state management */
+:global(body.sidebar-open) {
+  overflow: hidden;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .layout-sidebar {
+    border-right-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .layout *,
+  .content-overlay {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,27 @@
+<div class="layout" [class.sidebar-collapsed]="sidebarService.isCollapsed">
+  <!-- Header Section -->
+  <app-header class="layout-header"></app-header>
+  
+  <!-- Main Content Area -->
+  <div class="layout-body">
+    <!-- Sidebar -->
+    <app-sidebar class="layout-sidebar"></app-sidebar>
+    
+    <!-- Main Content -->
+    <main class="layout-content" role="main" [attr.aria-expanded]="!sidebarService.isCollapsed">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+    
+    <!-- Content Overlay for Mobile -->
+    <div 
+      class="content-overlay" 
+      *ngIf="!sidebarService.isCollapsed"
+      (click)="sidebarService.collapse()"
+      [@fadeAnimation]></div>
+  </div>
+  
+  <!-- Footer Section -->
+  <app-footer class="layout-footer"></app-footer>
+</div>

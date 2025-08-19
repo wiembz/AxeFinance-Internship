@@ -1,0 +1,86 @@
+<aside class="app-sidebar"
+       [class.collapsed]="sidebarService.isCollapsed"
+       [class.dark-theme]="isDarkMode"
+       role="navigation"
+       [attr.aria-label]="sidebarService.isCollapsed ? 'Collapsed navigation' : 'Main navigation'"
+       [attr.aria-expanded]="!sidebarService.isCollapsed">
+
+  <!-- Refined Brand Header -->
+  <div class="sidebar-header">
+    <button class="brand-toggle"
+            (click)="onToggleSidebar()"
+            [attr.aria-label]="sidebarService.isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+            type="button">
+
+      <div class="brand-content">
+        <!-- Elegant Logo -->
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="brand-icon">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+
+        <!-- Clean Brand Text -->
+        <div class="brand-text" *ngIf="!sidebarService.isCollapsed">
+          <span class="brand-title">TechStack</span>
+          <span class="brand-subtitle">Dashboard</span>
+        </div>
+
+        <!-- Simple Toggle Indicator -->
+        <div class="toggle-indicator" *ngIf="!sidebarService.isCollapsed">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <!-- Clean Navigation -->
+  <nav class="sidebar-nav">
+    <ul class="nav-list" role="menubar">
+      <li *ngFor="let item of navigationItems"
+          class="nav-item"
+          [class.active]="isRouteActive(item.route)"
+          [class.primary]="item.primary">
+
+        <a [routerLink]="item.route"
+           class="nav-link"
+           role="menuitem"
+           [attr.title]="sidebarService.isCollapsed ? item.label : null"
+           (click)="onItemClick(item)">
+
+          <!-- Simple Icon -->
+          <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path [attr.d]="getIconSvg(item.icon)"></path>
+          </svg>
+
+          <!-- Clean Label -->
+          <span class="nav-label" *ngIf="!sidebarService.isCollapsed">
+            {{ item.label }}
+          </span>
+
+          <!-- Simple Badge -->
+          <span class="nav-badge" *ngIf="item.badge && item.badge > 0 && !sidebarService.isCollapsed">
+            {{ item.badge > 99 ? '99+' : item.badge }}
+          </span>
+        </a>
+
+        <!-- Clean Tooltip for collapsed state -->
+        <div class="nav-tooltip" *ngIf="sidebarService.isCollapsed">
+          {{ item.label }}
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Simple Footer -->
+  <div class="sidebar-footer" *ngIf="!sidebarService.isCollapsed">
+    <div class="footer-content">
+      <div class="version-info">
+        <span class="version-label">v1</span>
+      </div>
+    </div>
+  </div>
+
+</aside>

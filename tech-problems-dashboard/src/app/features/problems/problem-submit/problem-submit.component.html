@@ -1,0 +1,387 @@
+<!-- Professional Problem Submission Dashboard -->
+<div class="problem-submission-dashboard">
+
+  <!-- Elegant Header Section -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zM12 15.4l3.76 2-1-4.28 3.32-2.88-4.38-.38L12 6.1l-1.7 3.76-4.38.38 3.32 2.88-1 4.28L12 15.4z"/>
+        </svg>
+      </div>
+      <div class="brand-content">
+        <h1 class="brand-title">Submit New Problem</h1>
+        <p class="brand-subtitle">Report an issue or request help for your project</p>
+      </div>
+    </div>
+
+    <!-- Navigation Breadcrumb -->
+    <div class="header-nav">
+      <nav class="breadcrumb">
+        <a routerLink="/dashboard" class="breadcrumb-link">Dashboard</a>
+        <span class="breadcrumb-separator">/</span>
+        <a routerLink="/problems" class="breadcrumb-link">Problems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Submit Problem</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Content Area -->
+  <main class="form-content">
+    <!-- Loading State -->
+    <div class="content-state loading-state" *ngIf="loading">
+      <div class="state-visual">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+      </div>
+      <div class="state-content">
+        <h3>Loading Form Data</h3>
+        <p>Please wait while we prepare the submission form...</p>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="alert alert-success" *ngIf="success">
+      <div class="alert-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <div class="alert-content">
+        <h4>Success!</h4>
+        <p>{{ success }}</p>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-error" *ngIf="error">
+      <div class="alert-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+        </svg>
+      </div>
+      <div class="alert-content">
+        <h4>Error</h4>
+        <p>{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card" *ngIf="!loading">
+      <form [formGroup]="problemForm" (ngSubmit)="onSubmit()" class="problem-form">
+        
+        <!-- Basic Information Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <span class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+              </span>
+              Problem Details
+            </h3>
+            <p class="section-description">Provide essential information about your problem</p>
+          </div>
+          
+          <div class="form-grid">
+            <!-- Title Field -->
+            <div class="form-group full-width">
+              <label for="title" class="form-label required">Problem Title</label>
+              <input
+                type="text"
+                id="title"
+                formControlName="title"
+                class="form-control"
+                placeholder="Enter a clear, descriptive title"
+                [class.error]="isFieldInvalid('title')"
+              />
+              <div class="field-hint">Be specific and concise (e.g., "Login button not responding on mobile")</div>
+              <div class="field-error" *ngIf="isFieldInvalid('title')">
+                <span class="error-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                  </svg>
+                </span>
+                <span class="error-text">{{ getFieldError('title') }}</span>
+              </div>
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group full-width">
+              <label for="description" class="form-label required">Description</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                class="form-control form-textarea"
+                rows="6"
+                placeholder="Provide a detailed description of the problem. Include steps to reproduce, expected behavior, and actual behavior."
+                [class.error]="isFieldInvalid('description')"
+              ></textarea>
+              <div class="field-meta">
+                <span class="character-count">{{ problemForm.get('description')?.value?.length || 0 }} / 2000 characters</span>
+              </div>
+              <div class="field-error" *ngIf="isFieldInvalid('description')">
+                <span class="error-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                  </svg>
+                </span>
+                <span class="error-text">{{ getFieldError('description') }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Department & Project Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <span class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,7V3H2V21H22V7H12M6,19H4V17H6V19M6,15H4V13H6V15M6,11H4V9H6V11M6,7H4V5H6V7M10,19H8V17H10V19M10,15H8V13H10V15M10,11H8V9H10V11M10,7H8V5H10V7M20,19H12V17H20V19M20,15H12V13H20V15M20,11H12V9H20V11Z"/>
+                </svg>
+              </span>
+              Department & Project
+            </h3>
+            <p class="section-description">Select the relevant department and project</p>
+          </div>
+          
+          <div class="form-grid">
+            <!-- Department Field -->
+            <div class="form-group">
+              <label for="department" class="form-label required">Department</label>
+              <select
+                id="department"
+                formControlName="departmentId"
+                class="form-control form-select"
+                [class.error]="isFieldInvalid('departmentId')"
+                (change)="onDepartmentChange()"
+              >
+                <option value="">Select Department</option>
+                <option *ngFor="let dept of departments" [value]="dept.id">
+                  {{ dept.name }}
+                </option>
+              </select>
+              <div class="field-error" *ngIf="isFieldInvalid('departmentId')">
+                <span class="error-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                  </svg>
+                </span>
+                <span class="error-text">Department is required</span>
+              </div>
+            </div>
+
+            <!-- Project Field -->
+            <div class="form-group">
+              <label for="project" class="form-label">Project</label>
+              <select
+                id="project"
+                formControlName="projectId"
+                class="form-control form-select"
+                [class.error]="isFieldInvalid('projectId')"
+              >
+                <option value="">Select Project (Optional)</option>
+                <option *ngFor="let project of projects" [value]="project.id">
+                  {{ project.name }}
+                </option>
+              </select>
+              <div class="field-hint" *ngIf="!problemForm.get('departmentId')?.value">
+                Select a department first to see available projects
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Tags Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <span class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.78 12.45,22 13,22C13.55,22 14.05,21.78 14.41,21.41L21.41,14.41C21.78,14.05 22,13.55 22,13C22,12.45 21.78,11.95 21.41,11.58Z"/>
+                </svg>
+              </span>
+              Tags
+            </h3>
+            <p class="section-description">Add relevant tags to help categorize your problem</p>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Select Relevant Tags</label>
+              <div class="tags-grid">
+                <div *ngFor="let tag of availableTags" class="tag-option">
+                  <input
+                    type="checkbox"
+                    [id]="'tag-' + tag.id"
+                    (change)="onTagChange(tag, $event)"
+                    class="tag-checkbox"
+                  />
+                  <label [for]="'tag-' + tag.id" class="tag-option-label">
+                    <span class="tag-checkmark"></span>
+                    <span class="tag-name">{{ tag.name }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="customTag" class="form-label">Add Custom Tag</label>
+              <div class="custom-tag-input">
+                <input
+                  type="text"
+                  id="customTag"
+                  formControlName="customTag"
+                  class="form-control"
+                  placeholder="Enter custom tag"
+                  (keyup.enter)="addCustomTag()"
+                />
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  (click)="addCustomTag()"
+                  [disabled]="!problemForm.get('customTag')?.value"
+                >
+                  <span class="btn-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                    </svg>
+                  </span>
+                  Add Tag
+                </button>
+              </div>
+            </div>
+
+            <!-- Selected Tags Display -->
+            <div class="form-group full-width" *ngIf="tagsArray.length > 0">
+              <label class="form-label">Selected Tags</label>
+              <div class="selected-tags">
+                <span *ngFor="let tag of tagsArray.controls; let i = index" class="selected-tag">
+                  <span class="tag-text">{{ tag.value }}</span>
+                  <button type="button" class="tag-remove" (click)="removeTag(i)" aria-label="Remove tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                    </svg>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Attachments Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <span class="section-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+              </span>
+              File Attachments
+            </h3>
+            <p class="section-description">Upload screenshots, logs, or other relevant files</p>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Upload Files (Optional)</label>
+              <div class="file-upload-zone">
+                <input
+                  type="file"
+                  id="fileInput"
+                  multiple
+                  accept="image/*,.pdf,.txt,.log,.json"
+                  (change)="onFileSelect($event)"
+                  class="file-input"
+                />
+                <label for="fileInput" class="file-upload-label">
+                  <div class="upload-content">
+                    <div class="upload-icon">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" opacity="0.5">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                      </svg>
+                    </div>
+                    <div class="upload-text">
+                      <p class="upload-title">Click to upload files</p>
+                      <p class="upload-subtitle">or drag and drop</p>
+                      <p class="upload-formats">PNG, JPG, PDF, TXT, LOG files (Max 10MB each)</p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Uploaded Files Display -->
+            <div class="form-group full-width" *ngIf="selectedFiles.length > 0">
+              <label class="form-label">Uploaded Files</label>
+              <div class="uploaded-files">
+                <div *ngFor="let file of selectedFiles; let i = index" class="uploaded-file">
+                  <div class="file-info">
+                    <div class="file-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                      </svg>
+                    </div>
+                    <div class="file-details">
+                      <div class="file-name">{{ file.name }}</div>
+                      <div class="file-size">{{ formatFileSize(file.size) }}</div>
+                    </div>
+                  </div>
+                  
+                  <div class="file-preview" *ngIf="file.type.startsWith('image/')">
+                    <img [src]="getFilePreview(file)" alt="Preview" class="file-preview-image" />
+                  </div>
+                  
+                  <button 
+                    type="button" 
+                    class="file-remove-btn" 
+                    (click)="removeFile(i)"
+                    aria-label="Remove file"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>        <!-- Form Actions Section -->
+        <section class="form-actions">
+          <div class="actions-container">
+            <button type="button" class="btn btn-secondary" (click)="clearForm()">
+              <span class="btn-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+                </svg>
+              </span>
+              Clear Form
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-primary" 
+              [disabled]="problemForm.invalid || submitting"
+            >
+              <span *ngIf="submitting" class="btn-spinner">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spin">
+                  <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"/>
+                </svg>
+              </span>
+              <span *ngIf="!submitting" class="btn-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                </svg>
+              </span>
+              {{ submitting ? 'Submitting...' : 'Submit Problem' }}
+            </button>
+          </div>
+        </section>
+
+      </form>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,360 @@
+/* Elegant Sidebar Design - Focused on Finesse */
+
+.app-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-light);
+  box-shadow: var(--card-shadow-sm);
+  z-index: var(--z-sticky);
+  transition: width 0.25s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    width: 72px;
+  }
+
+  &.dark-theme {
+    background: var(--bg-darker);
+    border-right-color: var(--border-medium);
+    box-shadow: var(--card-shadow-md);
+  }
+}
+
+/* Clean Header */
+.sidebar-header {
+  flex-shrink: 0;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-surface);
+}
+
+.brand-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--space-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--bg-lighter);
+  }
+
+  &:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+}
+
+.brand-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.brand-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-icon {
+  color: var(--brand-primary);
+  transition: color 0.2s ease;
+
+  .brand-toggle:hover & {
+    color: var(--brand-primary-light);
+  }
+}
+
+.brand-text {
+  flex: 1;
+  min-width: 0;
+}
+
+  .brand-title {
+    display: block;
+  font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  margin: 0 0 2px 0;
+  }
+
+  .brand-subtitle {
+    display: block;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+    line-height: 1.2;
+    margin: 0;
+  opacity: 0.8;
+}
+
+.toggle-indicator {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+
+  .brand-toggle:hover & {
+    color: var(--text-secondary);
+  }
+}
+
+/* Clean Navigation */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-md) 0;
+
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 2px;
+
+    &:hover {
+      background: var(--border-medium);
+    }
+  }
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  position: relative;
+
+  &.primary .nav-link {
+    background: var(--brand-primary);
+    color: var(--white);
+    font-weight: 600;
+    margin: 0 var(--space-sm) var(--space-sm);
+
+    &:hover {
+      background: var(--brand-primary-light);
+    }
+
+    .nav-icon {
+      color: var(--white);
+    }
+  }
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  transition: all 0.2s ease;
+  position: relative;
+  border-radius: var(--radius-md);
+  margin: 0 var(--space-sm);
+
+  &:hover {
+    background: var(--bg-lighter);
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background: var(--brand-primary);
+    color: var(--white);
+
+    .nav-icon {
+      color: var(--white);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: -2px;
+  }
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+
+  .nav-link:hover & {
+    color: var(--brand-primary);
+  }
+}
+
+.nav-label {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-badge {
+  background: var(--brand-accent);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Clean Tooltip for collapsed state */
+.nav-tooltip {
+  position: absolute;
+  left: 72px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-darker);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  box-shadow: var(--card-shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 4px solid transparent;
+    border-right-color: var(--bg-darker);
+  }
+
+  .nav-item:hover & {
+    opacity: 1;
+  }
+}
+
+/* Clean Footer */
+.sidebar-footer {
+  padding: var(--space-md);
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-lighter);
+  flex-shrink: 0;
+}
+
+.footer-content {
+  text-align: center;
+}
+
+.version-info {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Collapsed State */
+.collapsed {
+  .nav-link {
+    justify-content: center;
+    padding: var(--space-md);
+    margin: 0 var(--space-sm) var(--space-xs);
+  }
+
+  .nav-icon {
+    margin: 0;
+  }
+
+  .nav-label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .nav-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    transform: scale(0.75);
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    z-index: var(--z-modal);
+
+    &:not(.collapsed) {
+    transform: translateX(0);
+    }
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .nav-link,
+  .brand-toggle {
+    transition: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .app-sidebar {
+    border-right-width: 2px;
+  }
+
+  .nav-link.active {
+    outline: 2px solid var(--brand-accent);
+  }
+}
+
+/* Focus Management */
+.nav-link:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+}
+
+.brand-toggle:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}

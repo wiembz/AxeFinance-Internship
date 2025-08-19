@@ -1,0 +1,267 @@
+/* Theme Toggle Component Styles */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Compact Mode Styles */
+.theme-toggle.compact {
+  .compact-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+
+    &:hover {
+      background: var(--bg-lighter);
+      border-color: var(--border-medium);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+      box-shadow: var(--card-shadow-md);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    .theme-icon {
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+
+    .theme-label {
+      white-space: nowrap;
+    }
+  }
+}
+
+/* Full Mode Styles */
+.theme-options {
+  display: flex;
+  gap: var(--space-xs);
+  background: var(--bg-lighter);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs);
+  border: 1px solid var(--border-light);
+}
+
+.theme-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+
+  &:hover {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    box-shadow: var(--card-shadow);
+  }
+
+  &.active {
+    background: var(--bg-surface);
+    color: var(--brand-primary);
+    box-shadow: var(--card-shadow-md);
+    font-weight: 600;
+
+    .option-icon {
+      color: var(--brand-primary);
+    }
+  }
+
+  .option-icon {
+    flex-shrink: 0;
+    transition: color var(--transition-fast);
+  }
+
+  .option-label {
+    white-space: nowrap;
+  }
+
+  .active-indicator {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--brand-primary);
+    border-radius: var(--radius-full);
+  }
+}
+
+/* System Info */
+.system-info {
+  margin-top: var(--space-sm);
+  text-align: center;
+}
+
+.system-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  background: var(--bg-light);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  display: inline-block;
+}
+
+/* Icon Animations */
+.theme-icon,
+.option-icon {
+  .sun-icon {
+    animation: rotate 20s linear infinite;
+  }
+
+  .moon-icon {
+    transition: transform var(--transition-normal);
+  }
+
+  .auto-icon {
+    animation: pulse 3s ease-in-out infinite;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .theme-toggle:not(.compact) {
+    .theme-options {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .theme-option {
+      justify-content: flex-start;
+      min-width: 120px;
+    }
+  }
+
+  .compact-btn {
+    .theme-label {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-toggle {
+    .compact-btn {
+      min-width: 40px;
+      padding: var(--space-sm);
+    }
+
+    .theme-options {
+      padding: var(--space-xs);
+    }
+
+    .theme-option {
+      min-width: 40px;
+      padding: var(--space-sm);
+    }
+
+    .option-label {
+      display: none;
+    }
+  }
+}
+
+/* Animations */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Dark Mode Specific Styles */
+.dark-theme {
+  .theme-toggle {
+    .theme-option.active {
+      background: var(--bg-surface);
+      box-shadow: var(--card-shadow-lg);
+    }
+
+    .system-label {
+      background: var(--bg-surface);
+    }
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .theme-option {
+    border: 1px solid var(--border-medium);
+
+    &.active {
+      border-color: var(--brand-primary);
+      border-width: 2px;
+    }
+  }
+
+  .compact-btn {
+    border-width: 2px;
+
+    &:hover {
+      border-width: 2px;
+    }
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-icon,
+  .option-icon,
+  .theme-option,
+  .compact-btn {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Focus States */
+.theme-option:focus,
+.compact-btn:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.theme-option:focus:not(:focus-visible),
+.compact-btn:focus:not(:focus-visible) {
+  outline: none;
+}

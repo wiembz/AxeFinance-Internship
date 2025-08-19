@@ -1,0 +1,313 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DepartmentListItem } from '../../../shared/models/department.model';
+import { ProblemSubmission, ProblemTag } from '../../../shared/models/problem.model';
+import { ProjectListItem } from '../../../shared/models/project.model';
+import { DepartmentListResponse, DepartmentService } from '../../../shared/services/department.service';
+import { ProblemService } from '../../../shared/services/problem.service';
+import { ProjectListResponse, ProjectService } from '../../../shared/services/project.service';
+
+@Component({
+  selector: 'app-problem-submit',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './problem-submit.component.html',
+  styleUrls: ['./problem-submit.component.scss']
+})
+export class ProblemSubmitComponent implements OnInit {
+  problemForm!: FormGroup;
+  departments: DepartmentListItem[] = [];
+  projects: ProjectListItem[] = [];
+  popularTags: string[] = [];
+  availableTags: { id: string; name: string }[] = [];
+  selectedFiles: File[] = [];
+  submitting = false;
+  loading = false;
+  success = '';
+  error = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private problemService: ProblemService,
+    private departmentService: DepartmentService,
+    private projectService: ProjectService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.initializeForm();
+    this.loadDepartments();
+    this.loadProjects();
+    this.loadPopularTags();
+  }
+
+  private initializeForm(): void {
+    this.problemForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]],
+      departmentId: ['', Validators.required],
+      projectId: [{value: '', disabled: true}], // Start disabled
+      tags: [''],
+      customTag: [''],
+      category: ['Technical', Validators.required],
+      expectedOutcome: [''],
+      stepsToReproduce: [''],
+      environment: [''],
+      impactLevel: ['Medium', Validators.required],
+      urgency: ['Medium', Validators.required]
+    });
+
+    // Subscribe to department changes to enable/disable project field
+    this.problemForm.get('departmentId')?.valueChanges.subscribe(departmentId => {
+      const projectControl = this.problemForm.get('projectId');
+      if (departmentId) {
+        projectControl?.enable();
+      } else {
+        projectControl?.disable();
+        projectControl?.setValue('');
+      }
+    });
+  }
+
+  private loadDepartments(): void {
+    this.departmentService.getDepartments().subscribe({
+      next: (response: DepartmentListResponse) => {
+        this.departments = response.departments;
+      },
+      error: (error: any) => {
+        console.error('Error loading departments:', error);
+      }
+    });
+  }
+
+  private loadProjects(): void {
+    this.projectService.getProjects().subscribe({
+      next: (response: ProjectListResponse) => {
+        this.projects = response.projects;
+      },
+      error: (error: any) => {
+        console.error('Error loading projects:', error);
+      }
+    });
+  }
+
+  private loadPopularTags(): void {
+    this.problemService.getPopularTags().subscribe({
+      next: (response) => {
+        this.popularTags = response.data.map((tag: ProblemTag) => tag.name);
+        this.availableTags = response.data.map((tag: ProblemTag) => ({
+          id: tag.id.toString(),
+          name: tag.name
+        }));
+      },
+      error: (error: any) => {
+        console.error('Error loading tags:', error);
+        // Fallback tags
+        this.availableTags = [
+          { id: '1', name: 'bug' },
+          { id: '2', name: 'feature' },
+          { id: '3', name: 'ui' },
+          { id: '4', name: 'performance' }
+        ];
+      }
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files) {
+      this.selectedFiles = Array.from(target.files);
+    }
+  }
+
+  removeFile(index: number): void {
+    this.selectedFiles.splice(index, 1);
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.problemForm.valid) {
+      this.submitting = true;
+      this.error = '';
+      this.success = '';
+
+      try {
+        const formValue = this.problemForm.value;
+        const problemSubmission: ProblemSubmission = {
+          title: formValue.title,
+          description: formValue.description,
+          departmentId: parseInt(formValue.departmentId),
+          projectId: formValue.projectId ? parseInt(formValue.projectId) : 0,
+          tags: formValue.tags ? formValue.tags.split(',').map((tag: string) => tag.trim()) : [],
+          attachments: this.selectedFiles
+        };
+
+        const response = await this.problemService.createProblem(problemSubmission);
+
+        if (response.success) {
+          this.success = 'Problem submitted successfully!';
+          this.submitting = false;
+
+          // Navigate to problems list after 2 seconds
+          setTimeout(() => {
+            this.router.navigate(['/problems']);
+          }, 2000);
+        } else {
+          this.error = response.message || 'Failed to submit problem. Please try again.';
+          this.submitting = false;
+        }
+
+      } catch (error: any) {
+        this.error = error.message || 'Failed to submit problem. Please try again.';
+        this.submitting = false;
+      }
+    } else {
+      this.markFormGroupTouched(this.problemForm);
+    }
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.problemForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.problemForm.get(fieldName);
+    if (field && field.errors && (field.dirty || field.touched)) {
+      if (field.errors['required']) {
+        return `${fieldName} is required`;
+      }
+      if (field.errors['minlength']) {
+        return `${fieldName} must be at least ${field.errors['minlength'].requiredLength} characters`;
+      }
+      if (field.errors['maxlength']) {
+        return `${fieldName} must not exceed ${field.errors['maxlength'].requiredLength} characters`;
+      }
+    }
+    return '';
+  }
+
+  clearForm(): void {
+    this.problemForm.reset();
+    this.selectedFiles = [];
+    this.error = '';
+    this.success = '';
+    this.initializeForm();
+  }
+
+  // Additional methods for template functionality
+  onDepartmentChange(): void {
+    // Reset project selection when department changes
+    this.problemForm.get('projectId')?.setValue('');
+  }
+
+  onTagChange(tag: { id: string; name: string }, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    const tagsControl = this.problemForm.get('tags');
+    let currentTags = tagsControl?.value ? tagsControl.value.split(',').map((t: string) => t.trim()).filter((t: string) => t) : [];
+
+    if (checkbox.checked) {
+      if (!currentTags.includes(tag.name)) {
+        currentTags.push(tag.name);
+      }
+    } else {
+      currentTags = currentTags.filter((t: string) => t !== tag.name);
+    }
+
+    tagsControl?.setValue(currentTags.join(', '));
+  }
+
+  addCustomTag(): void {
+    const customTagControl = this.problemForm.get('customTag');
+    const tagsControl = this.problemForm.get('tags');
+    const customTagValue = customTagControl?.value?.trim();
+
+    if (!customTagValue) {
+      return;
+    }
+
+    // Get current tags
+    const currentTags = tagsControl?.value ?
+      tagsControl.value.split(',').map((t: string) => t.trim()).filter((t: string) => t) : [];
+
+    // Check if tag already exists (case-insensitive)
+    const tagExists = currentTags.some((tag: string) =>
+      tag.toLowerCase() === customTagValue.toLowerCase()
+    );
+
+    if (!tagExists) {
+      // Add the new tag
+      currentTags.push(customTagValue);
+      tagsControl?.setValue(currentTags.join(', '));
+    }
+
+    // Clear the custom tag input
+    customTagControl?.setValue('');
+  }
+
+  get tagsArray() {
+    // Return a mock FormArray-like structure for the template
+    const tagsValue = this.problemForm.get('tags')?.value || '';
+    const tags = tagsValue.split(',').map((t: string) => t.trim()).filter((t: string) => t);
+    return {
+      length: tags.length,
+      controls: tags.map((tag: string) => ({ value: tag }))
+    };
+  }
+
+  removeTag(index: number): void {
+    const tagsControl = this.problemForm.get('tags');
+    const currentTags = tagsControl?.value ? tagsControl.value.split(',').map((t: string) => t.trim()).filter((t: string) => t) : [];
+    currentTags.splice(index, 1);
+    tagsControl?.setValue(currentTags.join(', '));
+  }
+
+  onFileSelect(event: Event): void {
+    this.onFileSelected(event);
+  }
+
+  getFileIcon(file: File): string {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'pdf': return '📄';
+      case 'doc':
+      case 'docx': return '📝';
+      case 'xls':
+      case 'xlsx': return '📊';
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif': return '🖼️';
+      case 'zip':
+      case 'rar': return '📦';
+      default: return '📎';
+    }
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  getFilePreview(file: File): string | null {
+    if (file.type.startsWith('image/')) {
+      return URL.createObjectURL(file);
+    }
+    return null;
+  }
+}
