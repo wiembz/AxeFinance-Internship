@@ -201,6 +201,8 @@ export class ProblemSubmitComponent implements OnInit {
     if (this.problemForm.valid) {
       this.submitting = true;
       this.error = '';
+      // Debug: log AzureLink value before submit
+      console.log('AzureLink value:', this.problemForm.get('azureLink')?.value);
       this.success = '';
       try {
         const formValue = this.problemForm.getRawValue();

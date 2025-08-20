@@ -80,9 +80,7 @@ export class ProblemDetailsComponent implements OnInit {
               } else if (!path.startsWith('/uploads/')) {
                 path = '/uploads/' + path;
               } else {
-                // already starts with /uploads/
               }
-              // Prepend backend URL if not already absolute
               if (!path.startsWith('http')) {
                 this.problem.attachmentPath = backendBaseUrl + path;
               } else {
@@ -116,7 +114,18 @@ export class ProblemDetailsComponent implements OnInit {
             this.solutionsLoading = true;
             this.solutionService.getSolutionsByProblem(this.problem.id).subscribe({
               next: (res) => {
-                this.solutions = res.data || [];
+                // Handle both paginated and non-paginated responses
+                if (res.data) {
+                  if (Array.isArray(res.data)) {
+                    this.solutions = res.data;
+                  } else if ((res.data as any).solutions && Array.isArray((res.data as any).solutions)) {
+                    this.solutions = (res.data as any).solutions;
+                  } else {
+                    this.solutions = [];
+                  }
+                } else {
+                  this.solutions = [];
+                }
                 this.solutionsLoading = false;
               },
               error: () => {

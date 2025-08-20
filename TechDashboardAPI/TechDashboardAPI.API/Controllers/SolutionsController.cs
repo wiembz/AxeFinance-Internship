@@ -1,3 +1,4 @@
+using TechDashboardAPI.Application.DTOs.Problem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -84,7 +85,7 @@ public class SolutionsController : ControllerBase
                 .Include(s => s.User)
                 .Include(s => s.Problem)
                 .Include(s => s.ApprovedByUser)
-                .Where(s => s.ProblemId == problemId && s.Status == SolutionStatus.Approved && s.IsActive);
+                .Where(s => s.ProblemId == problemId && s.IsActive);
 
             // Apply sorting
             query = sortBy.ToLowerInvariant() switch
@@ -104,7 +105,7 @@ public class SolutionsController : ControllerBase
             var solutions = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(s => new SolutionSummaryDto
+                .Select(s => new SolutionDto
                 {
                     Id = s.Id,
                     Content = s.Content,
@@ -969,7 +970,7 @@ public class SolutionsController : ControllerBase
 
 public class PaginatedSolutionsResponse
 {
-    public List<SolutionSummaryDto> Solutions { get; set; } = new();
+    public List<SolutionDto> Solutions { get; set; } = new();
     public int TotalCount { get; set; }
     public int Page { get; set; }
     public int PageSize { get; set; }

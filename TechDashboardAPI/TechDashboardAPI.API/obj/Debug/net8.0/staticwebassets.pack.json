@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\0b9116d3-54e8-40ce-963e-9f83307f2800.png",
+      "PackagePath": "staticwebassets\\uploads\\0b9116d3-54e8-40ce-963e-9f83307f2800.png"
+    },
+    {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\18ce9814-b850-4648-91fd-2006f3093b02.pdf",
       "PackagePath": "staticwebassets\\uploads\\18ce9814-b850-4648-91fd-2006f3093b02.pdf"
     },
@@ -29,8 +33,20 @@
       "PackagePath": "staticwebassets\\uploads\\43d7097b-d8b7-45f1-a820-872a5898d397.pdf"
     },
     {
+      "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\47ba9652-1bbe-4892-b805-4cc1ef1686c7.png",
+      "PackagePath": "staticwebassets\\uploads\\47ba9652-1bbe-4892-b805-4cc1ef1686c7.png"
+    },
+    {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\4f92eaa2-8263-4a15-b187-5b328f17f78f.pdf",
       "PackagePath": "staticwebassets\\uploads\\4f92eaa2-8263-4a15-b187-5b328f17f78f.pdf"
+    },
+    {
+      "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\500418a1-bfa5-435e-aacf-d1514f78b2ff.png",
+      "PackagePath": "staticwebassets\\uploads\\500418a1-bfa5-435e-aacf-d1514f78b2ff.png"
+    },
+    {
+      "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\606596fb-e9e5-4979-86db-7d3a6411cf7f.png",
+      "PackagePath": "staticwebassets\\uploads\\606596fb-e9e5-4979-86db-7d3a6411cf7f.png"
     },
     {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\61e47826-6a8a-4fde-bec4-5ac940f10009.pdf",
@@ -43,6 +59,10 @@
     {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\679859b0-a5e2-4c34-a8ad-6911d2d4eb9b.pdf",
       "PackagePath": "staticwebassets\\uploads\\679859b0-a5e2-4c34-a8ad-6911d2d4eb9b.pdf"
+    },
+    {
+      "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\79f03921-3d81-4d2a-9825-d120056ff5be.png",
+      "PackagePath": "staticwebassets\\uploads\\79f03921-3d81-4d2a-9825-d120056ff5be.png"
     },
     {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\87417746-5631-4602-a678-f22bbef87dcc.pdf",
@@ -91,6 +111,10 @@
     {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\d1403312-3d1c-48fd-af21-c423f6942af3.png",
       "PackagePath": "staticwebassets\\uploads\\d1403312-3d1c-48fd-af21-c423f6942af3.png"
+    },
+    {
+      "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\dd138c3c-bf45-43f0-b929-8f92061f3c58.png",
+      "PackagePath": "staticwebassets\\uploads\\dd138c3c-bf45-43f0-b929-8f92061f3c58.png"
     },
     {
       "Id": "C:\\Users\\wiem\\OneDrive\\Bureau\\5\\AxeFinance Internship\\TechDashboardAPI\\TechDashboardAPI.API\\wwwroot\\uploads\\dde50c46-656a-4ea1-839f-c090444c893b.pdf",

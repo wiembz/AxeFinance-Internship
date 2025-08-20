@@ -1,3 +1,5 @@
+using TechDashboardAPI.Application.DTOs.Problem;
+using TechDashboardAPI.Application.DTOs.Problem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,8 @@ using System.Text.Json.Serialization;
 using TechDashboardAPI.Domain.Entities;
 using TechDashboardAPI.Domain.Enums;
 using TechDashboardAPI.Infrastructure.Data;
+using TechDashboardAPI.Application.DTOs;
+using UpdateProblemRequest = TechDashboardAPI.Application.DTOs.UpdateProblemRequest;
 using TechDashboardAPI.Application.Responses;
 
 namespace TechDashboardAPI.API.Controllers;
@@ -392,41 +396,43 @@ public class ProblemsController : ControllerBase
             var canEdit = problem.CreatedBy == userId || isAdmin;
             var canDelete = problem.CreatedBy == userId || isAdmin;
 
-            var problemDetail = new ProblemDetailDto
-            {
-                Id = problem.Id,
-                Title = problem.Title,
-                Description = problem.Description,
-                Tags = problem.Tags ?? string.Empty,
-                CreatedDate = problem.CreatedDate,
-                CreatedBy = problem.CreatedByUser?.Username ?? "Unknown",
-                ProjectName = problem.Project?.Name ?? "Unknown Project",
-                DepartmentName = problem.Project?.Department?.Name ?? "Unknown Department",
-                AttachmentPath = problem.AttachmentPath,
-                LikeCount = problem.LikeCount,
-                IsLikedByCurrentUser = problem.ProblemLikes.Any(pl => pl.UserId == userId),
-                SolutionsCount = problem.Solutions.Count,
-                CanEdit = canEdit,
-                CanDelete = canDelete,
-                HasAttachment = !string.IsNullOrEmpty(problem.AttachmentPath),
-                Status = problem.Status.ToString(),
-                Solutions = problem.Solutions.Select(s => new SolutionSummaryDto
-                {
-                    Id = s.Id,
-                    Content = s.Content ?? string.Empty,
-                    AttachmentPath = s.AttachmentPath,
-                    AzureDevOpsLink = s.AzureDevOpsLink,
-                    Status = s.Status.ToString(),
-                    CreatedDate = s.CreatedDate,
-                    ApprovedDate = s.ApprovedDate,
-                    CreatedBy = s.User?.Username ?? "Unknown",
-                    ApprovedBy = s.ApprovedByUser?.Username,
-                    ProblemTitle = problem.Title,
-                    HasAttachment = !string.IsNullOrEmpty(s.AttachmentPath),
-                    CanEdit = s.UserId == userId && s.Status == SolutionStatus.Pending,
-                    CanDelete = s.UserId == userId && s.Status == SolutionStatus.Pending
-                }).OrderByDescending(s => s.CreatedDate).ToList()
-            };
+                    var problemDetail = new ProblemDetailDto
+                    {
+                        Id = problem.Id,
+                        Title = problem.Title,
+                        Description = problem.Description,
+                        Tags = problem.Tags ?? string.Empty,
+                        CreatedDate = problem.CreatedDate,
+                        CreatedBy = problem.CreatedByUser?.Username ?? "Unknown",
+                        ProjectName = problem.Project?.Name ?? "Unknown Project",
+                        DepartmentName = problem.Project?.Department?.Name ?? "Unknown Department",
+                        AttachmentPath = problem.AttachmentPath,
+                        LikeCount = problem.LikeCount,
+                        IsLikedByCurrentUser = problem.ProblemLikes.Any(pl => pl.UserId == userId),
+                        SolutionsCount = problem.Solutions.Count(s => s.IsActive),
+                        CanEdit = canEdit,
+                        CanDelete = canDelete,
+                        HasAttachment = !string.IsNullOrEmpty(problem.AttachmentPath),
+                        Status = problem.Status.ToString(),
+                        AzureLink = problem.AzureLink,
+                        AssignedToUserId = problem.AssignedToUserId,
+                        Solutions = problem.Solutions.Select(s => new TechDashboardAPI.Application.DTOs.Problem.SolutionDto
+                        {
+                            Id = s.Id,
+                            Content = s.Content ?? string.Empty,
+                            AttachmentPath = s.AttachmentPath,
+                            AzureDevOpsLink = s.AzureDevOpsLink,
+                            Status = s.Status.ToString(),
+                            CreatedDate = s.CreatedDate,
+                            ApprovedDate = s.ApprovedDate,
+                            CreatedBy = s.User?.Username ?? "Unknown",
+                            ApprovedBy = s.ApprovedByUser?.Username,
+                            ProblemTitle = problem.Title,
+                            HasAttachment = !string.IsNullOrEmpty(s.AttachmentPath),
+                            CanEdit = s.UserId == userId && s.Status == SolutionStatus.Pending,
+                            CanDelete = s.UserId == userId && s.Status == SolutionStatus.Pending
+                        }).OrderByDescending(s => s.CreatedDate).ToList()
+                    };
 
             _logger.LogInformation("Successfully retrieved problem details. CorrelationId: {CorrelationId}, ProblemId: {ProblemId}, SolutionsCount: {SolutionsCount}",
                 correlationId, id, problemDetail.Solutions.Count);
@@ -522,7 +528,9 @@ public class ProblemsController : ControllerBase
                 CreatedBy = userId,
                 CreatedDate = DateTime.UtcNow,
                 IsActive = true,
-                LikeCount = 0
+                LikeCount = 0,
+                AzureLink = request.AzureLink,
+                AssignedToUserId = request.AssignedToUserId
             };
 
             // Handle file upload
@@ -1031,7 +1039,7 @@ public class ProblemsController : ControllerBase
             // Filter by minimum usage and prepare response
             var filteredTags = tagCounts
                 .Where(kvp => kvp.Value >= minUsage)
-                .Select(kvp => new TagInfoDto
+                .Select(kvp => new TechDashboardAPI.Application.DTOs.Problem.TagInfoDto
                 {
                     Name = kvp.Key,
                     UsageCount = kvp.Value
@@ -1040,7 +1048,7 @@ public class ProblemsController : ControllerBase
                 .ThenBy(t => t.Name)
                 .ToList();
 
-            var response = new TagsResponseDto
+            var response = new TechDashboardAPI.Application.DTOs.Problem.TagsResponseDto
             {
                 Tags = filteredTags,
                 TotalTags = filteredTags.Count,
@@ -1052,10 +1060,9 @@ public class ProblemsController : ControllerBase
                     : 0
             };
 
-            _logger.LogInformation("Successfully retrieved problem tags. CorrelationId: {CorrelationId}, TotalTags: {TotalTags}, FilteredTags: {FilteredTags}",
-                correlationId, tagCounts.Count, filteredTags.Count);
+            _logger.LogInformation($"Successfully retrieved problem tags. CorrelationId: {correlationId}, TotalTags: {tagCounts.Count}, FilteredTags: {filteredTags.Count}");
 
-            return Ok(ApiResponse<TagsResponseDto>.SuccessResponse(
+            return Ok(ApiResponse<TechDashboardAPI.Application.DTOs.Problem.TagsResponseDto>.SuccessResponse(
                 response,
                 $"Successfully retrieved {filteredTags.Count} tags."));
         }
@@ -1257,44 +1264,7 @@ public class ProblemLikeDto
 
 public class TagInfoDto
 {
-    public string Name { get; set; } = string.Empty;
-    public int UsageCount { get; set; }
-}
-
-
-public class TagsResponseDto
-{
-    public List<TagInfoDto> Tags { get; set; } = new();
-    public int TotalTags { get; set; }
-    public int TotalProblemsWithTags { get; set; }
-    public int MinUsageFilter { get; set; }
-    public string MostUsedTag { get; set; } = string.Empty;
-    public double AvgTagsPerProblem { get; set; }
-}
-
-
-public class ProblemDetailDto : ProblemSummaryDto
-{
-    public new string Description { get; set; } = string.Empty;
-
-    public string Status { get; set; } = string.Empty;
-
-    public List<SolutionSummaryDto> Solutions { get; set; } = new();
-
-    public bool CanDelete { get; set; }
-}
-
-
-public class SolutionSummaryDto
-{
-
-    public int Id { get; set; }
-
-
-    public string Content { get; set; } = string.Empty;
-
-
-    public string? AttachmentPath { get; set; }
+    // ...existing code...
 
 
     public string? AzureDevOpsLink { get; set; }
@@ -1326,44 +1296,6 @@ public class SolutionSummaryDto
 
 
 
-public class CreateProblemRequest
-{
-    [Required(ErrorMessage = "Title is required")]
-    [StringLength(200, ErrorMessage = "Title cannot exceed 200 characters")]
-    public string Title { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Description is required")]
-    [StringLength(5000, ErrorMessage = "Description cannot exceed 5000 characters")]
-    public string Description { get; set; } = string.Empty;
-
-    [StringLength(500, ErrorMessage = "Tags cannot exceed 500 characters")]
-    public string Tags { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Project ID is required")]
-    [Range(1, int.MaxValue, ErrorMessage = "Project ID must be a positive integer")]
-    public int ProjectId { get; set; }
-
-    public IFormFile? Attachment { get; set; }
-    public int DepartmentId { get; internal set; }
-}
-
-
-public class UpdateProblemRequest
-{
-    [Required(ErrorMessage = "Title is required")]
-    [StringLength(200, ErrorMessage = "Title cannot exceed 200 characters")]
-    public string Title { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Description is required")]
-    [StringLength(5000, ErrorMessage = "Description cannot exceed 5000 characters")]
-    public string Description { get; set; } = string.Empty;
-
-    [StringLength(500, ErrorMessage = "Tags cannot exceed 500 characters")]
-    public string Tags { get; set; } = string.Empty;
-
-    public IFormFile? Attachment { get; set; }
-    public bool RemoveExistingAttachment { get; set; } = false;
-}
 
 
 #endregion

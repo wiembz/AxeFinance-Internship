@@ -1,3 +1,57 @@
+// Dashboard Header Styles for Solution Form
+.dashboard-header {
+  background: linear-gradient(var(--brand-primary), var(--brand-secondary));
+  color: white;
+  padding: var(--space-lg) 0;
+  margin-bottom: var(--space-xl);
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    .brand-icon {
+      display: flex;
+      align-items: center;
+      svg {
+        color: var(--brand-accent);
+        width: 28px;
+        height: 28px;
+      }
+    }
+    .brand-content {
+      .brand-title {
+        font-size: var(--font-2xl);
+        font-weight: var(--font-bold);
+        margin: 0;
+      }
+      .brand-subtitle {
+        font-size: var(--font-md);
+        color: rgba(255,255,255,0.85);
+        margin: 0;
+      }
+    }
+  }
+  .header-nav {
+    margin-top: var(--space-md);
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: var(--font-sm);
+      .breadcrumb-link {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        &:hover { color: #fff; }
+      }
+      .breadcrumb-separator {
+        color: rgba(255,255,255,0.5);
+      }
+      .breadcrumb-current {
+        color: #fff;
+        font-weight: var(--font-medium);
+      }
+    }
+  }
+}
 .solution-attribute-container {
   display: flex;
   justify-content: center;

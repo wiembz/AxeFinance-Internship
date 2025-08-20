@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TechDashboardAPI.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+adf2933ec03490008ba28769054bbd2632e3b0a2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+567b2810508c29d97f2432b509d6639a5e3de657")]
 [assembly: System.Reflection.AssemblyProductAttribute("TechDashboardAPI.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TechDashboardAPI.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

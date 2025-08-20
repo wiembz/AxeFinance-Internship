@@ -1,39 +1,126 @@
-<div class="solution-attribute-container">
-  <div class="solution-card">
-    <header class="card-header">
-      <h2>Attribute Solution</h2>
-      <p class="subtitle">Provide a solution for this problem</p>
-    </header>
-    <form [formGroup]="solutionForm" (ngSubmit)="submit()" enctype="multipart/form-data" novalidate>
-      <div class="form-group">
-        <label for="title">Title <span class="required">*</span></label>
-        <input id="title" type="text" formControlName="title" maxlength="100" [class.invalid]="solutionForm.get('title')?.invalid && solutionForm.get('title')?.touched">
-        <div class="error-message" *ngIf="solutionForm.get('title')?.invalid && solutionForm.get('title')?.touched">
-          Title is required (max 100 chars).
+
+<!-- Professional Solution Attribution Dashboard -->
+<div class="solution-submission-dashboard">
+  <!-- Elegant Header Section -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zM12 15.4l3.76 2-1-4.28 3.32-2.88-4.38-.38L12 6.1l-1.7 3.76-4.38.38 3.32 2.88-1 4.28L12 15.4z"/>
+        </svg>
+      </div>
+      <div class="brand-content">
+        <h1 class="brand-title">Attribute Solution</h1>
+        <p class="brand-subtitle">Provide a solution for this problem</p>
+      </div>
+    </div>
+    <!-- Navigation Breadcrumb -->
+    <div class="header-nav">
+      <nav class="breadcrumb">
+        <a routerLink="/dashboard" class="breadcrumb-link">Dashboard</a>
+        <span class="breadcrumb-separator">/</span>
+        <a routerLink="/problems" class="breadcrumb-link">Problems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Attribute Solution</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Content Area -->
+  <main class="form-content">
+    <!-- Loading State -->
+    <div class="content-state loading-state" *ngIf="loading">
+      <div class="state-visual">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="description">Description <span class="required">*</span></label>
-        <textarea id="description" formControlName="description" rows="5" maxlength="2000" [class.invalid]="solutionForm.get('description')?.invalid && solutionForm.get('description')?.touched"></textarea>
-        <div class="error-message" *ngIf="solutionForm.get('description')?.invalid && solutionForm.get('description')?.touched">
-          Description is required (max 2000 chars).
-        </div>
+      <div class="state-content">
+        <h3>Submitting Solution</h3>
+        <p>Please wait while we process your solution...</p>
       </div>
-      <div class="form-group">
-        <label for="attachment">Attachment</label>
-        <input id="attachment" type="file" (change)="onFileChange($event)" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx,.xls,.xlsx,.csv">
+    </div>
+
+    <!-- Success Message -->
+    <div class="alert alert-success" *ngIf="success">
+      <div class="alert-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
       </div>
-      <div class="form-actions">
-        <button type="submit" class="primary-action" [disabled]="loading || !solutionForm.valid">
-          <span *ngIf="loading" class="spinner"></span>
-          Attribute Solution
-        </button>
-        <button type="button" class="secondary-action" (click)="router.navigate(['/problems', problemId])" [disabled]="loading">Cancel</button>
+      <div class="alert-content">
+        <h4>Success!</h4>
+        <p>Solution attributed successfully!</p>
       </div>
-      <div class="form-feedback">
-        <div class="success-message" *ngIf="success">Solution attributed successfully!</div>
-        <div class="error-message" *ngIf="error">{{ error }}</div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-error" *ngIf="error">
+      <div class="alert-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+        </svg>
       </div>
-    </form>
-  </div>
+      <div class="alert-content">
+        <h4>Error</h4>
+        <p>{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card" *ngIf="!loading">
+      <form [formGroup]="solutionForm" (ngSubmit)="submit()" enctype="multipart/form-data" class="solution-form" novalidate>
+        <!-- Basic Information Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">Solution Details</h3>
+            <p class="section-description">Provide essential information about your solution</p>
+          </div>
+          <div class="form-grid">
+            <!-- Title Field -->
+            <div class="form-group full-width">
+              <label for="title">Title <span class="required">*</span></label>
+              <input id="title" type="text" formControlName="title" maxlength="100" [class.invalid]="solutionForm.get('title')?.invalid && solutionForm.get('title')?.touched">
+              <div class="field-error" *ngIf="solutionForm.get('title')?.invalid && solutionForm.get('title')?.touched">
+                Title is required (max 100 chars).
+              </div>
+            </div>
+            <!-- Description Field -->
+            <div class="form-group full-width">
+              <label for="description">Description <span class="required">*</span></label>
+              <textarea id="description" formControlName="description" rows="5" maxlength="2000" [class.invalid]="solutionForm.get('description')?.invalid && solutionForm.get('description')?.touched"></textarea>
+              <div class="field-error" *ngIf="solutionForm.get('description')?.invalid && solutionForm.get('description')?.touched">
+                Description is required (max 2000 chars).
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- File Attachments Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <h3 class="section-title">Attachment</h3>
+            <p class="section-description">Optionally attach a file to support your solution</p>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="attachment">Attachment</label>
+              <input id="attachment" type="file" (change)="onFileChange($event)" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx,.xls,.xlsx,.csv">
+            </div>
+          </div>
+        </section>
+        <!-- Form Actions Section -->
+        <section class="form-actions">
+          <div class="actions-container">
+            <button type="submit" class="btn btn-primary" [disabled]="loading || !solutionForm.valid">
+              <span *ngIf="loading" class="btn-spinner">
+                <svg width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke="#fff" stroke-linecap="round" stroke-dasharray="31.415, 31.415" transform="rotate(72.0001 25 25)"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/></circle></svg>
+              </span>
+              Attribute Solution
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="router.navigate(['/problems', problemId])" [disabled]="loading">Cancel</button>
+          </div>
+        </section>
+      </form>
+    </div>
+  </main>
 </div>

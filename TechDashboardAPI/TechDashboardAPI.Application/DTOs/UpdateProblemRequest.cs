@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace TechDashboardAPI.Application.DTOs;
 
-public class CreateProblemRequest
+public class UpdateProblemRequest
 {
     [Required(ErrorMessage = "Title is required.")]
     [StringLength(200, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 200 characters.")]
@@ -16,11 +16,8 @@ public class CreateProblemRequest
     [StringLength(500, ErrorMessage = "Tags cannot exceed 500 characters.")]
     public string? Tags { get; set; }
 
-    [Required(ErrorMessage = "Project ID is required.")]
-    [Range(1, int.MaxValue, ErrorMessage = "Project ID must be a valid positive integer.")]
-    public int ProjectId { get; set; }
-
     public IFormFile? Attachment { get; set; }
+    public bool RemoveExistingAttachment { get; set; } = false;
 
     [StringLength(1000, ErrorMessage = "AzureLink cannot exceed 1000 characters.")]
     public string? AzureLink { get; set; }

@@ -111,10 +111,18 @@ public class ProblemService : IProblemService
             Solutions = problem.Solutions.Select(s => new SolutionDto
             {
                 Id = s.Id,
-                CreatedBy = s.UserId,
-                Details = s.Content,
-                CreatedDate = s.CreatedDate
-                // Add other properties if they exist in Solution entity
+                Content = s.Content,
+                AttachmentPath = s.AttachmentPath,
+                AzureDevOpsLink = s.AzureDevOpsLink,
+                Status = s.Status.ToString(),
+                CreatedDate = s.CreatedDate,
+                ApprovedDate = s.ApprovedDate,
+                CreatedBy = s.User != null ? s.User.Username : string.Empty,
+                ApprovedBy = s.ApprovedByUser != null ? s.ApprovedByUser.Username : null,
+                ProblemTitle = problem.Title,
+                HasAttachment = !string.IsNullOrEmpty(s.AttachmentPath),
+                CanEdit = s.UserId == userId && s.Status == SolutionStatus.Pending,
+                CanDelete = s.UserId == userId && s.Status == SolutionStatus.Pending
             }).ToList()
         };
 

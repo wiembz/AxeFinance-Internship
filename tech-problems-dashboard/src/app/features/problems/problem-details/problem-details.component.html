@@ -76,11 +76,24 @@
                 <div class="stat-item" *ngIf="problem.resolvedDate"><div class="stat-label">Resolved</div><div class="stat-value">{{ problem.resolvedDate | date:'medium' }}</div></div>
                 <div class="stat-item"><div class="stat-label">Status</div><div class="stat-value">{{ formatStatus(problem.status) }}</div></div>
                 <div class="stat-item" *ngIf="problem.isActive !== undefined"><div class="stat-label">Active</div><div class="stat-value">{{ problem.isActive ? 'Active' : 'Inactive' }}</div></div>
-                <div class="stat-item" *ngIf="problem.azureLink"><div class="stat-label">Azure DevOps</div><div class="stat-value"><a [href]="problem.azureLink" target="_blank">Azure Link</a></div></div>
-                <div class="stat-item" *ngIf="problem.assignedToUserName || problem.assignedToUserId"><div class="stat-label">Assigned To</div><div class="stat-value">{{ problem.assignedToUserName || problem.assignedToUserId }}</div></div>
+                <div class="stat-item">
+  <div class="stat-label">Azure DevOps</div>
+  <div class="stat-value">
+    <ng-container *ngIf="problem.azureLink; else noAzure">
+      <a [href]="problem.azureLink" target="_blank">Azure Link</a>
+    </ng-container>
+    <ng-template #noAzure>—</ng-template>
+  </div>
+</div>
+<div class="stat-item">
+  <div class="stat-label">Assigned To</div>
+  <div class="stat-value">
+    {{ problem.assignedToUserName || problem.assignedToUserId || '—' }}
+  </div>
+</div>
                 <div class="stat-item" *ngIf="problem.likeCount !== undefined"><div class="stat-label">Likes</div><div class="stat-value">{{ problem.likeCount }}</div></div>
                 <div class="stat-item" *ngIf="problem.isLikedByCurrentUser !== undefined"><div class="stat-label">Liked by You</div><div class="stat-value">{{ problem.isLikedByCurrentUser ? 'Yes' : 'No' }}</div></div>
-                <div class="stat-item" *ngIf="problem.solutionsCount !== undefined"><div class="stat-label">Solutions</div><div class="stat-value">{{ problem.solutionsCount }}</div></div>
+                <div class="stat-item" *ngIf="problem.solutionsCount !== undefined"><div class="stat-label">Solutions</div><div class="stat-value">{{ solutions.length > 0 ? solutions.length : problem.solutionsCount }}</div></div>
                 <div class="stat-item" *ngIf="problem.attachmentPath"><div class="stat-label">Attachment</div><div class="stat-value"><a [href]="problem.attachmentPath" target="_blank">Download</a></div></div>
               </div>
               <div class="problem-description-block">

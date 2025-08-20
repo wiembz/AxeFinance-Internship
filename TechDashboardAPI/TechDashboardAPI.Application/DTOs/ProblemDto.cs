@@ -80,18 +80,31 @@ namespace TechDashboardAPI.Application.DTOs.Problem
     // ✅ Extended DTO for detailed view with solutions
     public class ProblemDetailDto : ProblemResponseDto
     {
-        public List<SolutionDto> Solutions { get; set; } = new();
+        // These 'new' declarations ensure the properties are accessible for object initialization
+        public new string? AzureLink { get; set; }
+        public new int? AssignedToUserId { get; set; }
+    public List<SolutionDto> Solutions { get; set; } = new();
+    public bool CanEdit { get; set; }
+    public bool CanDelete { get; set; }
+    public bool HasAttachment { get; set; }
     }
 
     // ✅ DTO for nested solutions inside ProblemDetailDto
     public class SolutionDto
     {
         public int Id { get; set; }
-        public string Summary { get; set; } = string.Empty;
-        public string? Details { get; set; }
-        public int CreatedBy { get; set; }
+        public string Content { get; set; } = string.Empty;
+        public string? AttachmentPath { get; set; }
+        public string? AzureDevOpsLink { get; set; }
+        public string Status { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; }
-        public bool IsAccepted { get; set; }
+        public DateTime? ApprovedDate { get; set; }
+        public string CreatedBy { get; set; } = string.Empty;
+        public string? ApprovedBy { get; set; }
+        public string ProblemTitle { get; set; } = string.Empty;
+        public bool HasAttachment { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
     }
 
     // ✅ For reporting/statistics API
