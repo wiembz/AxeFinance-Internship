@@ -47,6 +47,7 @@ public class ProblemsController : ControllerBase
         [FromQuery] string sortBy = "created",
         [FromQuery] string sortOrder = "desc")
     {
+        
         var correlationId = Guid.NewGuid().ToString();
         _logger.LogInformation("Getting problems. CorrelationId: {CorrelationId}, Page: {Page}, PageSize: {PageSize}, SearchTerm: {SearchTerm}, ProjectId: {ProjectId}, DepartmentId: {DepartmentId}",
             correlationId, page, pageSize, searchTerm, projectId, departmentId);
@@ -499,12 +500,24 @@ public class ProblemsController : ControllerBase
                 }
             }
 
+
+            // Get the departmentId from the project
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == request.ProjectId && p.IsActive);
+            if (project == null)
+            {
+                _logger.LogWarning("Project not found or inactive. CorrelationId: {CorrelationId}, ProjectId: {ProjectId}",
+                    correlationId, request.ProjectId);
+                return BadRequest(ApiResponse<object>.ErrorResponse(
+                    $"Project with ID {request.ProjectId} not found or is inactive."));
+            }
+
             var problem = new Problem
             {
                 Title = request.Title.Trim(),
                 Description = request.Description.Trim(),
                 Tags = NormalizeTags(request.Tags),
                 ProjectId = request.ProjectId,
+                DepartmentId = project.DepartmentId, // Set department from project
                 CreatedBy = userId,
                 CreatedDate = DateTime.UtcNow,
                 IsActive = true,
@@ -1113,6 +1126,7 @@ public class ProblemsController : ControllerBase
         return $"uploads/{uniqueFileName}";
     }
 
+
     private bool DeleteFileAsync(string filePath)
     {
         try
@@ -1129,6 +1143,34 @@ public class ProblemsController : ControllerBase
         {
             return false;
         }
+    }    [HttpGet("tags/popular")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPopularTags([FromQuery] int limit = 10)
+    {
+        // Fetch all tags to memory
+        var allTags = await _context.Problems
+            .Where(p => !string.IsNullOrEmpty(p.Tags))
+            .Select(p => p.Tags)
+            .ToListAsync();
+
+        // Split and count tags in memory
+        var tagCounts = allTags
+            .SelectMany(tags => tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            .Select(t => t.Trim().ToLower())
+            .GroupBy(t => t)
+            .Select(g => new { Name = g.Key, UsageCount = g.Count() })
+            .OrderByDescending(g => g.UsageCount)
+            .Take(limit)
+            .ToList();
+
+        var result = tagCounts.Select((t, idx) => new
+        {
+            id = idx + 1,
+            name = t.Name,
+            usageCount = t.UsageCount
+        }).ToList();
+
+        return Ok(new { success = true, message = "Popular tags loaded", data = result });
     }
 }
 
@@ -1281,9 +1323,8 @@ public class SolutionSummaryDto
     public bool CanDelete { get; set; }
 }
 
-#endregion
 
-#region Request Models
+
 
 public class CreateProblemRequest
 {
@@ -1303,6 +1344,7 @@ public class CreateProblemRequest
     public int ProjectId { get; set; }
 
     public IFormFile? Attachment { get; set; }
+    public int DepartmentId { get; internal set; }
 }
 
 
@@ -1322,5 +1364,6 @@ public class UpdateProblemRequest
     public IFormFile? Attachment { get; set; }
     public bool RemoveExistingAttachment { get; set; } = false;
 }
+
 
 #endregion

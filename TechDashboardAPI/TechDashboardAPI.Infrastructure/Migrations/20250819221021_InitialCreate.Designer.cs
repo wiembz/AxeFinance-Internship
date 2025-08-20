@@ -12,8 +12,8 @@ using TechDashboardAPI.Infrastructure.Data;
 namespace TechDashboardAPI.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250813100018_RemovePriorityFromProblems")]
-    partial class RemovePriorityFromProblems
+    [Migration("20250819221021_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,11 +57,6 @@ namespace TechDashboardAPI.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<DateTime?>("LastUpdatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -88,9 +83,6 @@ namespace TechDashboardAPI.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentHeadId")
                         .HasDatabaseName("IX_Departments_DepartmentHeadId");
-
-                    b.HasIndex("IsActive")
-                        .HasDatabaseName("IX_Departments_IsActive");
 
                     b.HasIndex("Name")
                         .IsUnique()
@@ -191,9 +183,16 @@ namespace TechDashboardAPI.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AssignedToUserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("AttachmentPath")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("AzureLink")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -202,6 +201,9 @@ namespace TechDashboardAPI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -246,11 +248,15 @@ namespace TechDashboardAPI.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssignedToUserId");
+
                     b.HasIndex("CreatedBy")
                         .HasDatabaseName("IX_Problems_CreatedBy");
 
                     b.HasIndex("CreatedDate")
                         .HasDatabaseName("IX_Problems_CreatedDate");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("LikeCount")
                         .HasDatabaseName("IX_Problems_LikeCount");
@@ -679,19 +685,33 @@ namespace TechDashboardAPI.Infrastructure.Migrations
 
             modelBuilder.Entity("TechDashboardAPI.Domain.Entities.Problem", b =>
                 {
+                    b.HasOne("TechDashboardAPI.Domain.Entities.User", "AssignedToUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedToUserId");
+
                     b.HasOne("TechDashboardAPI.Domain.Entities.User", "CreatedByUser")
                         .WithMany("Problems")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TechDashboardAPI.Domain.Entities.Project", "Project")
-                        .WithMany("Problems")
-                        .HasForeignKey("ProjectId")
+                    b.HasOne("TechDashboardAPI.Domain.Entities.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TechDashboardAPI.Domain.Entities.Project", "Project")
+                        .WithMany("Problems")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AssignedToUser");
+
                     b.Navigation("CreatedByUser");
+
+                    b.Navigation("Department");
 
                     b.Navigation("Project");
                 });

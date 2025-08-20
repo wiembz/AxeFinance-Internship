@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +23,9 @@ type ExtractedProblemsData = {
   styleUrls: ['./problem-list.component.scss']
 })
 export class ProblemListComponent implements OnInit {
+  attributeSolution(problem: ProblemListItem) {
+    this.router.navigate(['/solutions/attribute'], { queryParams: { problemId: problem.id } });
+  }
   loading = false;
   error = '';
   problems: ProblemListItem[] = [];
@@ -185,8 +189,12 @@ export class ProblemListComponent implements OnInit {
   }
 
   viewProblem(problemId: number): void {
-    // Navigate to problem details page
-    this.router.navigate(['/problems', problemId]);
+    // Only navigate if the problemId is a valid number
+    if (typeof problemId === 'number' && !isNaN(problemId) && problemId > 0) {
+      this.router.navigate(['/problems', problemId]);
+    } else {
+      console.warn('Invalid problem ID:', problemId);
+    }
   }
 
   editProblem(problemId: number): void {
@@ -248,7 +256,8 @@ export class ProblemListComponent implements OnInit {
   }
 
   // Method to format status for display
-  formatStatus(status: string): string {
+  formatStatus(status: string | undefined | null): string {
+    if (!status) return 'Unknown';
     switch (status.toLowerCase()) {
       case 'inprogress': return 'In Progress';
       case 'underreview': return 'Under Review';
@@ -268,6 +277,22 @@ export class ProblemListComponent implements OnInit {
     return true;
   }
 
+  // Helper to get assigned user name (for template compatibility)
+  getAssignedToUserName(problem: ProblemListItem): string {
+    return problem.assignedToUserName || 'Unassigned';
+  }
+
+  // Helper to get Azure link (for template compatibility)
+  getAzureLink(problem: ProblemListItem): string | null {
+    return problem.azureLink || null;
+  }
+/*
+  // Button handler for attributing a solution to a problem
+  attributeSolution(problem: ProblemListItem): void {
+    // TODO: Implement solution attribution logic (open dialog, navigate, etc.)
+    alert(`Attribute a solution to problem: ${problem.title}`);
+  }
+*/
   // Method to get relative time (could be implemented with a pipe later)
   getRelativeTime(date: Date): string {
     const now = new Date();

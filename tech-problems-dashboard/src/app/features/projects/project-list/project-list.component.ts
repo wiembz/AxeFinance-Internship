@@ -171,13 +171,23 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   private initializeFromRoute(): void {
-    const paramDepartmentId = this.route.snapshot.params['departmentId'];
+    const paramDepartmentIdRaw = this.route.snapshot.params['departmentId'];
     const queryDepartmentIdRaw = this.route.snapshot.queryParamMap.get('departmentId');
-    const queryDepartmentId = queryDepartmentIdRaw ? +queryDepartmentIdRaw : null;
 
-    const resolvedDepartmentId = paramDepartmentId ? +paramDepartmentId : queryDepartmentId;
+    let resolvedDepartmentId: number | null = null;
+    if (paramDepartmentIdRaw !== undefined && paramDepartmentIdRaw !== null) {
+      const parsed = Number(paramDepartmentIdRaw);
+      if (!isNaN(parsed) && isFinite(parsed)) {
+        resolvedDepartmentId = parsed;
+      }
+    } else if (queryDepartmentIdRaw !== undefined && queryDepartmentIdRaw !== null) {
+      const parsed = Number(queryDepartmentIdRaw);
+      if (!isNaN(parsed) && isFinite(parsed)) {
+        resolvedDepartmentId = parsed;
+      }
+    }
 
-    if (resolvedDepartmentId) {
+    if (resolvedDepartmentId !== null) {
       this.departmentId = resolvedDepartmentId;
       this.isDepartmentLocked = true;
       this.departmentControl.setValue(resolvedDepartmentId);

@@ -23,9 +23,9 @@ C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.AssemblyInfoInputs.cache
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.AssemblyInfo.cs
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.csproj.CoreCompileInputs.cache
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.sourcelink.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDash.47DEE854.Up2Date
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.dll
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\refint\TechDashboardAPI.Application.dll
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.pdb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\ref\TechDashboardAPI.Application.dll
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Application\obj\Debug\net8.0\TechDashboardAPI.Application.sourcelink.json

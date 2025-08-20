@@ -60,7 +60,8 @@ export const superadminSignupGuard: CanActivateFn = () => {
   return auth.superAdminExists().pipe(
     map(res => {
       if (!res.success) return false;
-      if (res.data === false) return true; // allow signup when no superadmin
+      // Use res.exists for backend compatibility
+      if ((res as any).exists === false) return true; // allow signup when no superadmin
       return router.createUrlTree(['/login']);
     }),
     catchError(() => of(router.createUrlTree(['/login'])))

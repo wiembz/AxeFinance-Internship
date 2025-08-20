@@ -1,3 +1,4 @@
+using TechDashboardAPI.Application.DTOs.Problem;
 using TechDashboardAPI.Application.DTOs;
 using TechDashboardAPI.Application.Responses;
 using TechDashboardAPI.Domain.Entities;
@@ -30,8 +31,8 @@ public interface ISolutionService
 {
     Task<ApiResponse<Solution>> GetSolutionByIdAsync(int id);
     Task<ApiResponse<PaginatedResponse<Solution>>> GetSolutionsByProblemAsync(int problemId, int page, int pageSize);
-    Task<ApiResponse<Solution>> CreateSolutionAsync(CreateSolutionDto dto, int userId);
-    Task<ApiResponse<Solution>> UpdateSolutionAsync(int id, UpdateSolutionDto dto, int userId);
+    Task<ApiResponse<Solution>> CreateSolutionAsync(TechDashboardAPI.Application.DTOs.SolutionDto.CreateSolutionDto dto, int userId);
+    Task<ApiResponse<Solution>> UpdateSolutionAsync(int id, TechDashboardAPI.Application.DTOs.SolutionDto.UpdateSolutionDto dto, int userId);
     Task<ApiResponse<bool>> DeleteSolutionAsync(int id, int userId);
     Task<ApiResponse<bool>> ApproveSolutionAsync(int id, bool isApproved, int adminId);
 }

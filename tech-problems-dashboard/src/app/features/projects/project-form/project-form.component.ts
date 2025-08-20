@@ -42,8 +42,14 @@ export class ProjectFormComponent implements OnInit {
   ngOnInit() {
     // Check for preselected department from query params
     this.route.queryParams.subscribe(params => {
-      if (params['departmentId']) {
-        this.preselectedDepartmentId = +params['departmentId'];
+      const raw = params['departmentId'];
+      if (raw !== undefined && raw !== null) {
+        const parsed = Number(raw);
+        if (!isNaN(parsed) && isFinite(parsed)) {
+          this.preselectedDepartmentId = parsed;
+        } else {
+          this.preselectedDepartmentId = null;
+        }
       }
     });
 
@@ -133,8 +139,19 @@ export class ProjectFormComponent implements OnInit {
         };
 
         this.projectService.createProject(createDto).subscribe({
-          next: () => {
-            this.navigateBack();
+          next: (createdProject) => {
+            // Redirect to the project list with departmentId and departmentName as query params
+            if (createdProject && createdProject.departmentId && createdProject.departmentName) {
+              this.router.navigate(['/admin/projects'], {
+                queryParams: {
+                  departmentId: createdProject.departmentId,
+                  departmentName: createdProject.departmentName
+                }
+              });
+            } else {
+              // Fallback: go back to the list if no department info is returned
+              this.navigateBack();
+            }
           },
           error: (error) => {
             console.error('Error creating project:', error);

@@ -91,9 +91,9 @@
           </span>
         </button>
 
-        <div class="register-link">
+        <div class="register-link" *ngIf="showCreateAccount">
           Don't have an account yet?
-          <a routerLink="/register">Create Account</a>
+          <a routerLink="/superadmin-signup">Create Account</a>
         </div>
       </form>
     </div>

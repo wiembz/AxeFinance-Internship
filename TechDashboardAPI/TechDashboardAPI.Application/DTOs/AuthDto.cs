@@ -29,38 +29,16 @@ public class RegisterDto
     [StringLength(100, ErrorMessage = "Email address cannot exceed 100 characters.")]
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the password for the new user account.
-    /// Must meet security requirements for strength and complexity.
-    /// Will be hashed before storage for security.
-    /// </summary>
     [Required(ErrorMessage = "Password is required.")]
     [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
-    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]", 
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$", 
         ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
     public string Password { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the optional department ID that the user will be associated with.
-    /// If provided, the user will have access to projects within this department.
-    /// Can be null for users not tied to a specific department.
-    /// </summary>
-    /// <example>1</example>
     public int? DepartmentId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the optional project ID that the user will be associated with.
-    /// If provided, the user will have specific access to this project.
-    /// Can be null for users with broader department-level access.
-    /// </summary>
-    /// <example>5</example>
     public int? ProjectId { get; set; }
-
-    /// <summary>
-    /// Validates that the registration data meets all business requirements.
-    /// </summary>
-    /// <returns>True if all validation passes, false otherwise.</returns>
-    public bool IsValid()
+ public bool IsValid()
     {
         return !string.IsNullOrWhiteSpace(Username) &&
                !string.IsNullOrWhiteSpace(Email) &&
@@ -71,25 +49,14 @@ public class RegisterDto
     }
 }
 
-/// <summary>
-/// Data Transfer Object for user authentication requests.
-/// Contains the credentials required for user login to the system.
-/// </summary>
+
 public class LoginDto
 {
-    /// <summary>
-    /// Gets or sets the email address used for authentication.
-    /// Must match the email associated with an existing user account.
-    /// </summary>
-    /// <example>john.doe@company.com</example>
+
     [Required(ErrorMessage = "Email address is required for login.")]
     [EmailAddress(ErrorMessage = "Please provide a valid email address.")]
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the password for authentication.
-    /// Must match the password associated with the provided email address.
-    /// </summary>
     [Required(ErrorMessage = "Password is required for login.")]
     [StringLength(100, MinimumLength = 1, ErrorMessage = "Password cannot be empty.")]
     public string Password { get; set; } = string.Empty;

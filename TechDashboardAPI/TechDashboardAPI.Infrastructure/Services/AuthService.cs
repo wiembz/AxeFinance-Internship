@@ -484,11 +484,7 @@ public class AuthService : IAuthService
             return ApiResponse<UserResponseDto>.ErrorResponse("Username or email already exists.");
         }
 
-        if (!_fakeAdService.ValidateUser(registerDto.Email))
-        {
-            _logger.LogWarning("Registration validation failed - user not found in AD: {Email}", registerDto.Email);
-            return ApiResponse<UserResponseDto>.ErrorResponse("User not found in Active Directory.");
-        }
+    // AD check removed: allow any email to register as superadmin
 
         var passwordValidation = ValidatePasswordStrength(registerDto.Password);
         if (!passwordValidation.IsValid)
@@ -497,7 +493,7 @@ public class AuthService : IAuthService
             return ApiResponse<UserResponseDto>.ErrorResponse(passwordValidation.ErrorMessage);
         }
 
-        return new ApiResponse<UserResponseDto> { Success = true, Message = "Validation passed" };
+    return ApiResponse<UserResponseDto>.SuccessResponse(new UserResponseDto(), "Validation passed");
     }
 
     private async Task<ApiResponse<UserResponseDto>> CreateFirstUserAsync(RegisterDto registerDto)

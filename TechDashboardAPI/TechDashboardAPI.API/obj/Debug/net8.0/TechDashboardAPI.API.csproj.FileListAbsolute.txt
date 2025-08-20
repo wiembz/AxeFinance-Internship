@@ -150,8 +150,17 @@ C:\Users\wiem\OneDrive\Bureau\latest from zero\TechDashboardAPI\TechDashboardAPI
 C:\Users\wiem\OneDrive\Bureau\latest from zero\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.pdb
 C:\Users\wiem\OneDrive\Bureau\latest from zero\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.genruntimeconfig.cache
 C:\Users\wiem\OneDrive\Bureau\latest from zero\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\ref\TechDashboardAPI.API.dll
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.csproj.AssemblyReference.cache
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.AssemblyInfoInputs.cache
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.AssemblyInfo.cs
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.csproj.CoreCompileInputs.cache
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.sourcelink.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\appsettings.json
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\appsettings.Production.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\TechDashboardAPI.API.staticwebassets.runtime.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\TechDashboardAPI.API.exe
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\TechDashboardAPI.API.deps.json
@@ -281,13 +290,6 @@ C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\TechDashboardAPI.Application.pdb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\TechDashboardAPI.Domain.pdb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\TechDashboardAPI.Infrastructure.pdb
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.csproj.AssemblyReference.cache
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.AssemblyInfoInputs.cache
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.AssemblyInfo.cs
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.csproj.CoreCompileInputs.cache
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\staticwebassets\msbuild.TechDashboardAPI.API.Microsoft.AspNetCore.StaticWebAssets.props
@@ -302,5 +304,3 @@ C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.pdb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.genruntimeconfig.cache
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\ref\TechDashboardAPI.API.dll
-c:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\bin\Debug\net8.0\appsettings.Production.json
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.API\obj\Debug\net8.0\TechDashboardAPI.API.sourcelink.json

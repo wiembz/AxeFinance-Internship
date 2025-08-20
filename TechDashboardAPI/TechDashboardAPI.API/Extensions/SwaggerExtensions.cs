@@ -4,69 +4,8 @@ using System.Reflection;
 
 namespace TechDashboardAPI.API.Extensions;
 
-/// <summary>
-/// Swagger/OpenAPI Documentation Configuration Extensions
-/// 
-/// This class provides comprehensive configuration for API documentation using Swagger/OpenAPI 3.0.
-/// It creates professional, interactive API documentation with authentication support, detailed
-/// metadata, and enhanced user experience for developers consuming the Tech Dashboard API.
-/// 
-/// Features:
-/// - Comprehensive OpenAPI 3.0 specification generation
-/// - JWT Bearer token authentication integration
-/// - Interactive API testing interface with Swagger UI
-/// - XML documentation comments integration
-/// - Professional API metadata and contact information
-/// - Enhanced security scheme configuration
-/// - Customizable UI themes and branding
-/// 
-/// Documentation Benefits:
-/// - Auto-generated API specifications from code annotations
-/// - Interactive testing capabilities for all endpoints
-/// - Clear authentication requirements and examples
-/// - Comprehensive request/response schemas
-/// - Professional presentation for external developers
-/// - Integration with development and testing workflows
-/// 
-/// Security Integration:
-/// - JWT Bearer token authentication configuration
-/// - Security scheme definitions for protected endpoints
-/// - Authorization requirements clearly documented
-/// - Token format and usage examples provided
-/// 
-/// Usage:
-/// - Call AddCustomSwagger() during service configuration
-/// - Call UseCustomSwagger() in development environment pipeline
-/// - Access documentation at /swagger endpoint
-/// - Use interactive interface for API testing and exploration
-/// </summary>
 public static class SwaggerExtensions
 {
-    /// <summary>
-    /// Configures comprehensive Swagger/OpenAPI documentation with enhanced features and security integration.
-    /// 
-    /// This method sets up detailed API documentation including JWT authentication support, XML comments
-    /// integration, comprehensive metadata, and professional presentation. It creates a complete OpenAPI
-    /// specification that serves as both documentation and testing interface.
-    /// 
-    /// Configuration includes:
-    /// - OpenAPI 3.0 specification with comprehensive metadata
-    /// - JWT Bearer token authentication scheme integration
-    /// - XML documentation comments for detailed endpoint descriptions
-    /// - Professional API information and contact details
-    /// - Security requirements for protected endpoints
-    /// - Enhanced schema generation and examples
-    /// 
-    /// Features:
-    /// - Interactive API testing interface
-    /// - Comprehensive endpoint documentation
-    /// - Authentication integration and examples
-    /// - Request/response schema definitions
-    /// - Professional metadata and branding
-    /// - XML comments integration for detailed descriptions
-    /// </summary>
-    /// <param name="services">The service collection to configure</param>
-    /// <returns>The configured service collection for method chaining</returns>
     public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
     {
         // Add API Explorer for endpoint discovery

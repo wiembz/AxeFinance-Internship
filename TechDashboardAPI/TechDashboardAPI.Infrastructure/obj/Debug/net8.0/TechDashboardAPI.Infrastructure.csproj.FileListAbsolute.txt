@@ -30,10 +30,10 @@ C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.AssemblyInfoInputs.cache
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.AssemblyInfo.cs
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.sourcelink.json
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDash.4D3C795A.Up2Date
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.dll
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\refint\TechDashboardAPI.Infrastructure.dll
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.pdb
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.genruntimeconfig.cache
 C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\ref\TechDashboardAPI.Infrastructure.dll
-C:\Users\wiem\OneDrive\Bureau\5\AxeFinance Internship\TechDashboardAPI\TechDashboardAPI.Infrastructure\obj\Debug\net8.0\TechDashboardAPI.Infrastructure.sourcelink.json

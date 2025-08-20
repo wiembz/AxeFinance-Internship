@@ -778,9 +778,9 @@ public class ProjectsController : ControllerBase
     }
 
     // Endpoint to add a new problem (contributor/admin only, must belong to department/project)
-    [HttpPost("/api/problems")]
+    [HttpPost("{projectId}/problems")]
     [Authorize(Roles = "Contributor,Admin")]
-    public async Task<IActionResult> AddProblem([FromBody] CreateProblemRequest request)
+    public async Task<IActionResult> AddProblem(int projectId, [FromBody] CreateProblemRequest request)
     {
         try
         {

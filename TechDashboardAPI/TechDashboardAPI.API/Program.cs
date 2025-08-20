@@ -124,8 +124,10 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
+
 app.UseCustomMiddleware();
 
+// CORS must come before authentication, authorization, and MapControllers
 app.UseCors("AllowAngular");
 
 app.UseAuthentication();

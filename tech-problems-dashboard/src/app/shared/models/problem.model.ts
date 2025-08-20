@@ -1,30 +1,40 @@
+// Main Problem entity as returned by backend (aligned with backend Problem entity and DTOs)
 export interface Problem {
   id: number;
   title: string;
   description: string;
-  tags: string[];
+  tags: string[]; // UI: array, backend: CSV string
   status: ProblemStatus;
   departmentId: number;
   departmentName?: string;
   projectId: number;
   projectName?: string;
-  submittedBy: number;
-  submittedByName?: string;
-  assignedTo?: number;
-  assignedToName?: string;
+  createdBy: number;
+  createdByName?: string;
+  assignedToUserId?: number;
+  assignedToUserName?: string;
+  azureLink?: string;
+  attachmentPath?: string;
+  likeCount: number;
+  isLikedByCurrentUser?: boolean;
+  solutionsCount?: number;
+  isActive: boolean;
   createdDate: string;
   lastUpdatedDate?: string;
   resolvedDate?: string;
-  attachments: ProblemAttachment[];
-  isActive: boolean;
+  // For legacy support or future: attachments array
+  attachments?: ProblemAttachment[];
 }
 
+// Used for creating a new problem (matches backend CreateProblemDto)
 export interface ProblemSubmission {
   title: string;
   description: string;
   tags: string[];
   departmentId: number;
-  projectId: number;
+  projectId?: number;
+  azureLink?: string;
+  assignedToUserId?: number;
   attachments: File[];
 }
 
@@ -39,21 +49,9 @@ export interface ProblemAttachment {
   fileUrl: string;
 }
 
-export interface CreateProblemRequest {
-  title: string;
-  description: string;
-  tags: string[];
-  departmentId: number;
-  projectId: number;
-  attachments?: FileUploadRequest[];
-}
+// Remove CreateProblemRequest and FileUploadRequest (not used in current workflow)
 
-export interface FileUploadRequest {
-  fileName: string;
-  fileContent: string; // Base64 encoded
-  contentType: string;
-}
-
+// Used for lists/tables (matches backend ProblemResponseDto/ProblemListItem DTO)
 export interface ProblemListItem {
   id: number;
   title: string;
@@ -64,35 +62,44 @@ export interface ProblemListItem {
   departmentName: string;
   projectId: number;
   projectName: string;
-  submittedBy: number;
-  submittedByName: string;
-  assignedTo?: number;
-  assignedToName?: string;
+  createdBy: number;
+  createdByName: string;
+  assignedToUserId?: number;
+  assignedToUserName?: string;
+  azureLink?: string;
+  attachmentPath?: string;
+  likeCount: number;
+  isLikedByCurrentUser?: boolean;
+  solutionsCount?: number;
+  isActive: boolean;
   createdDate: string;
   lastUpdatedDate?: string;
+  resolvedDate?: string;
   attachmentCount: number;
-  isActive: boolean;
   canEdit: boolean;
   canDelete: boolean;
   priority?: string;
 }
 
+// Handles all possible backend pagination response shapes
 export interface PaginatedProblemsResponse {
-  Problems?: ProblemListItem[]; // Backend uses 'Problems'
-  problems?: ProblemListItem[]; // Some APIs use 'problems' (lowercase)
-  items?: ProblemListItem[];    // Fallback for other APIs that might use 'items'
+  Problems?: ProblemListItem[];
+  problems?: ProblemListItem[];
+  items?: ProblemListItem[];
   totalCount: number;
-  TotalCount?: number; // Backend uses 'TotalCount'
+  TotalCount?: number;
   totalPages: number;
-  TotalPages?: number; // Backend uses 'TotalPages'
+  TotalPages?: number;
   currentPage: number;
-  Page?: number;       // Backend uses 'Page'
-  page?: number;       // Some APIs use 'page' (lowercase)
+  Page?: number;
+  page?: number;
   pageSize: number;
-  PageSize?: number;   // Backend uses 'PageSize'
+  PageSize?: number;
 }
 
+// Must match backend ProblemStatus enum
 export enum ProblemStatus {
+  Requested = 'Requested',
   Open = 'Open',
   InProgress = 'InProgress',
   UnderReview = 'UnderReview',

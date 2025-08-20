@@ -1,3 +1,8 @@
+// ...existing imports...
+
+
+
+  // ...existing code...
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,10 +24,11 @@ import { ProjectListResponse, ProjectService } from '../../../shared/services/pr
 export class ProblemSubmitComponent implements OnInit {
   problemForm!: FormGroup;
   departments: DepartmentListItem[] = [];
+  allProjects: ProjectListItem[] = [];
   projects: ProjectListItem[] = [];
-  popularTags: string[] = [];
   availableTags: { id: string; name: string }[] = [];
-  selectedFiles: File[] = [];
+  selectedFile: File | null = null;
+  filePreviewUrl: string | null = null;
   submitting = false;
   loading = false;
   success = '';
@@ -37,6 +43,11 @@ export class ProblemSubmitComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  isTagSelected(tagName: string): boolean {
+    const tagsValue = this.problemForm.get('tags')?.value || '';
+    return tagsValue.split(',').map((t: string) => t.trim().toLowerCase()).includes(tagName.toLowerCase());
+  }
+
   ngOnInit(): void {
     this.initializeForm();
     this.loadDepartments();
@@ -46,26 +57,24 @@ export class ProblemSubmitComponent implements OnInit {
 
   private initializeForm(): void {
     this.problemForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      title: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
       description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]],
       departmentId: ['', Validators.required],
-      projectId: [{value: '', disabled: true}], // Start disabled
+      projectId: [{value: '', disabled: true}, Validators.required],
       tags: [''],
       customTag: [''],
-      category: ['Technical', Validators.required],
-      expectedOutcome: [''],
-      stepsToReproduce: [''],
-      environment: [''],
-      impactLevel: ['Medium', Validators.required],
-      urgency: ['Medium', Validators.required]
+      azureLink: [''],
+      assignedToUserId: ['']
     });
 
-    // Subscribe to department changes to enable/disable project field
+    // Subscribe to department changes to enable/disable and filter project field
     this.problemForm.get('departmentId')?.valueChanges.subscribe(departmentId => {
       const projectControl = this.problemForm.get('projectId');
       if (departmentId) {
+        this.projects = this.allProjects.filter(p => p.departmentId === parseInt(departmentId));
         projectControl?.enable();
       } else {
+        this.projects = [];
         projectControl?.disable();
         projectControl?.setValue('');
       }
@@ -86,7 +95,8 @@ export class ProblemSubmitComponent implements OnInit {
   private loadProjects(): void {
     this.projectService.getProjects().subscribe({
       next: (response: ProjectListResponse) => {
-        this.projects = response.projects;
+        this.allProjects = response.projects;
+        this.projects = [];
       },
       error: (error: any) => {
         console.error('Error loading projects:', error);
@@ -97,7 +107,6 @@ export class ProblemSubmitComponent implements OnInit {
   private loadPopularTags(): void {
     this.problemService.getPopularTags().subscribe({
       next: (response) => {
-        this.popularTags = response.data.map((tag: ProblemTag) => tag.name);
         this.availableTags = response.data.map((tag: ProblemTag) => ({
           id: tag.id.toString(),
           name: tag.name
@@ -118,14 +127,27 @@ export class ProblemSubmitComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
-    if (target.files) {
-      this.selectedFiles = Array.from(target.files);
-      setTimeout(() => this.cdr.detectChanges()); // Ensure change detection after file update
+    if (this.filePreviewUrl) {
+      URL.revokeObjectURL(this.filePreviewUrl);
+      this.filePreviewUrl = null;
     }
+    if (target.files && target.files.length > 0) {
+      this.selectedFile = target.files[0];
+      if (this.selectedFile.type.startsWith('image/')) {
+        this.filePreviewUrl = URL.createObjectURL(this.selectedFile);
+      }
+    } else {
+      this.selectedFile = null;
+    }
+    setTimeout(() => this.cdr.detectChanges());
   }
 
-  removeFile(index: number): void {
-    this.selectedFiles.splice(index, 1);
+  removeFile(): void {
+    if (this.filePreviewUrl) {
+      URL.revokeObjectURL(this.filePreviewUrl);
+      this.filePreviewUrl = null;
+    }
+    this.selectedFile = null;
   }
 
   async onSubmit(): Promise<void> {
@@ -133,33 +155,43 @@ export class ProblemSubmitComponent implements OnInit {
       this.submitting = true;
       this.error = '';
       this.success = '';
-
       try {
-        const formValue = this.problemForm.value;
+        const formValue = this.problemForm.getRawValue();
+        const selectedProject = this.allProjects.find(p => p.id === parseInt(formValue.projectId));
+        if (!selectedProject) {
+          this.error = 'Selected project is invalid.';
+          this.submitting = false;
+          return;
+        }
+        // Always use the departmentId from the selected project for referential integrity
+        const departmentId = selectedProject.departmentId;
+        const tags = formValue.tags ? formValue.tags.split(',').map((tag: string) => tag.trim()).filter((t: string) => t) : [];
         const problemSubmission: ProblemSubmission = {
           title: formValue.title,
           description: formValue.description,
-          departmentId: parseInt(formValue.departmentId),
-          projectId: formValue.projectId ? parseInt(formValue.projectId) : 0,
-          tags: formValue.tags ? formValue.tags.split(',').map((tag: string) => tag.trim()) : [],
-          attachments: this.selectedFiles
+          departmentId: departmentId,
+          projectId: selectedProject.id,
+          tags,
+          azureLink: formValue.azureLink || undefined,
+          assignedToUserId: formValue.assignedToUserId ? parseInt(formValue.assignedToUserId) : undefined,
+          attachments: this.selectedFile ? [this.selectedFile] : []
         };
-
         const response = await this.problemService.createProblem(problemSubmission);
-
         if (response.success) {
           this.success = 'Problem submitted successfully!';
           this.submitting = false;
-
-          // Navigate to problems list after 2 seconds
           setTimeout(() => {
-            this.router.navigate(['/problems']);
+            // Always redirect to admin project problem list after creation
+            if (problemSubmission.projectId) {
+              this.router.navigate([`/admin/projects/${problemSubmission.projectId}/problems`]);
+            } else {
+              this.router.navigate(['/problems']);
+            }
           }, 2000);
         } else {
           this.error = response.message || 'Failed to submit problem. Please try again.';
           this.submitting = false;
         }
-
       } catch (error: any) {
         this.error = error.message || 'Failed to submit problem. Please try again.';
         this.submitting = false;
@@ -203,7 +235,7 @@ export class ProblemSubmitComponent implements OnInit {
 
   clearForm(): void {
     this.problemForm.reset();
-    this.selectedFiles = [];
+    this.removeFile();
     this.error = '';
     this.success = '';
     this.initializeForm();
@@ -306,10 +338,7 @@ export class ProblemSubmitComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  getFilePreview(file: File): string | null {
-    if (file.type.startsWith('image/')) {
-      return URL.createObjectURL(file);
-    }
-    return null;
+  getFilePreview(): string | null {
+    return this.filePreviewUrl;
   }
 }

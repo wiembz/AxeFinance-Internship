@@ -1,0 +1,258 @@
+.problem-details-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+
+  // --- Dashboard Layout ---
+  .problems-dashboard {
+    max-width: 950px;
+    margin: 2.5rem auto;
+    background: #f7f9fb;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 70vh;
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+    padding: 2rem 2.5rem 1.5rem 2.5rem;
+    border-bottom: 1px solid #e3e8ee;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .brand-icon {
+    background: #e3f2fd;
+    border-radius: 50%;
+    padding: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #1976d2;
+  }
+  .brand-subtitle {
+    font-size: 1.1rem;
+    color: #789;
+    margin: 0.1rem 0 0 0;
+  }
+  .header-controls {
+    display: flex;
+    gap: 1rem;
+  }
+  .primary-action, .secondary-action {
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5em 1.4em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .primary-action {
+    background: #1976d2;
+    color: #fff;
+  }
+  .primary-action:hover {
+    background: #0d47a1;
+  }
+  .secondary-action {
+    background: #e3f2fd;
+    color: #1976d2;
+  }
+  .secondary-action:hover {
+    background: #bbdefb;
+  }
+
+  // --- Content States ---
+  .content-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    padding: 3rem 0;
+  }
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spinner-ring {
+    border: 4px solid #e3e8ee;
+    border-top: 4px solid #1976d2;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .error-state .error-message {
+    color: #d32f2f;
+    font-weight: 600;
+  }
+
+  // --- Problem Card ---
+  .problems-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem;
+  }
+  .problem-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(25, 118, 210, 0.07);
+    padding: 2.5rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    border-bottom: 1px solid #e3e8ee;
+    padding-bottom: 1.2rem;
+  }
+  .problem-identity {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .problem-avatar {
+    background: #e3f2fd;
+    border-radius: 50%;
+    padding: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .problem-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .problem-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: #222;
+  }
+  .problem-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.2em;
+  }
+  .status-badge {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .status-open { background: #1976d2; }
+  .status-in-progress { background: #fbc02d; }
+  .status-closed { background: #d84315; }
+  .status-resolved { background: #388e3c; }
+  .status-unknown { background: #888; }
+  .status-text {
+    font-size: 1rem;
+    color: #555;
+    text-transform: capitalize;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .problem-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  .stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1976d2;
+  }
+  .stat-label {
+    font-size: 0.95rem;
+    color: #888;
+  }
+  .problem-description {
+    font-size: 1.08rem;
+    color: #333;
+    margin: 0.5rem 0 0.2rem 0;
+  }
+  .problem-tags {
+    margin-bottom: 0.5rem;
+  }
+  .tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 1em;
+    padding: 0.2em 0.9em;
+    font-size: 0.95em;
+    margin-right: 0.5em;
+    margin-bottom: 0.3em;
+  }
+  .attachments {
+    margin-bottom: 0.5rem;
+  }
+  .attachments h4 {
+    margin-bottom: 0.3rem;
+    color: #444;
+  }
+  .attachments ul {
+    padding-left: 1.2em;
+  }
+  .attachments a {
+    color: #1976d2;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 700px) {
+    .dashboard-header, .problems-grid {
+      padding: 1.2rem !important;
+    }
+    .problem-card {
+      padding: 1.2rem !important;
+    }
+  }
+}

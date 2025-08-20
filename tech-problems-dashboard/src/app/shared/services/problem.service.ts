@@ -32,12 +32,20 @@ export class ProblemService {
       const formData = new FormData();
       formData.append('Title', problemData.title);
       formData.append('Description', problemData.description);
-      formData.append('ProjectId', problemData.projectId.toString());
+      formData.append('DepartmentId', problemData.departmentId.toString());
+      if (problemData.projectId !== undefined) {
+        formData.append('ProjectId', problemData.projectId.toString());
+      }
 
       if (problemData.tags && problemData.tags.length > 0) {
         formData.append('Tags', problemData.tags.join(','));
       }
-
+      if (problemData.azureLink) {
+        formData.append('AzureLink', problemData.azureLink);
+      }
+      if (problemData.assignedToUserId) {
+        formData.append('AssignedToUserId', problemData.assignedToUserId.toString());
+      }
       if (problemData.attachments && problemData.attachments.length > 0) {
         // For now, only send the first attachment since the backend expects single file
         const attachment = problemData.attachments[0];
@@ -50,7 +58,6 @@ export class ProblemService {
         `${this.apiUrl}`,
         formData
       ).toPromise();
-
       return response!;
     } catch (error: any) {
       console.error('Error creating problem:', error);

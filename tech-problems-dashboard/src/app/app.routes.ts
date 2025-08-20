@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { authGuard, superadminSignupGuard } from './core/auth/guards';
+import { authGuard, guestOnlyGuard, superadminSignupGuard } from './core/auth/guards';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
-  { path: 'login', loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent) },
-  { path: 'superadmin-signup', canActivate: [superadminSignupGuard], loadComponent: () => import('./features/auth/superadmin-signup/superadmin-signup.component').then(m => m.SuperadminSignupComponent) },
+  { path: 'login', canActivate: [guestOnlyGuard], loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent) },
+  { path: 'superadmin-signup', canActivate: [guestOnlyGuard, superadminSignupGuard], loadComponent: () => import('./features/auth/superadmin-signup/superadmin-signup.component').then(m => m.SuperadminSignupComponent) },
   {
     path: '',
     canActivate: [authGuard],
@@ -41,6 +41,7 @@ export const routes: Routes = [
             path: 'projects',
             loadComponent: () => import('./features/projects/project-list/project-list.component').then(m => m.ProjectListComponent)
           },
+
           {
             path: 'projects/create',
             loadComponent: () => import('./features/projects/project-form/project-form.component').then(m => m.ProjectFormComponent)
@@ -67,6 +68,10 @@ export const routes: Routes = [
             path: '',
             loadComponent: () => import('./features/problems/problem-list/problem-list.component').then(m => m.ProblemListComponent)
           },
+         /* {
+            path: ':id',
+            loadComponent: () => import('./features/problems/problem-details/problem-details.component').then(m => m.ProblemDetailsComponent)
+          },*/
           {
             path: 'submit',
             loadComponent: () => import('./features/problems/problem-submit/problem-submit.component').then(m => m.ProblemSubmitComponent)
@@ -76,7 +81,9 @@ export const routes: Routes = [
             loadComponent: () => import('./features/problems/problem-list/problem-list.component').then(m => m.ProblemListComponent)
           }
         ]
-      }
+      },
+      // Solutions routes
+
     ]
   },
   { path: '**', redirectTo: 'login' }

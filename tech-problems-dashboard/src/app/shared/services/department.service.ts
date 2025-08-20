@@ -40,7 +40,7 @@ export class DepartmentService {
     const queryParams: Record<string, string | number> = {
       page: params.page || 1,
       pageSize: params.pageSize || 10,
-      ...(params.search && { search: params.search })
+      ...(params.search && { searchTerm: params.search })
     };
 
     return this.api.get<DepartmentListResponse>('/departments', queryParams)
@@ -60,7 +60,7 @@ export class DepartmentService {
     const queryParams: Record<string, string | number> = {
       page: params.page || 1,
       pageSize: params.pageSize || 10,
-      ...(params.search && { search: params.search })
+      ...(params.search && { searchTerm: params.search })
     };
 
     return this.api.get<DepartmentProjectsResponse>(`/departments/${departmentId}/projects`, queryParams)

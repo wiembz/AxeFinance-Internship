@@ -28,10 +28,19 @@ export class LoginComponent {
   isLoading = false;
   error = '';
 
+  showCreateAccount = false;
+
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
+
+  constructor() {
+    this.auth.superAdminExists().subscribe(res => {
+      // Use res.exists for backend compatibility
+      this.showCreateAccount = res.success && (res as any).exists === false;
+    });
+  }
 
   onSubmit() {
     if (this.loginForm.invalid) return;

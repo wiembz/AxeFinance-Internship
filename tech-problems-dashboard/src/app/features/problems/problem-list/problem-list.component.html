@@ -57,7 +57,10 @@
           </svg>
           <span>Refresh</span>
         </button>
-        <a routerLink="/problems/submit" class="primary-action">
+        <a
+          [routerLink]="project ? ['/problems/submit', { projectId: project.id }] : ['/problems/submit']"
+          class="primary-action"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
           </svg>
@@ -131,13 +134,19 @@
         <!-- Card Body -->
         <div class="card-body">
           <div class="problem-stats">
-            <div class="stat-item">
+           <!-- <div class="stat-item">
               <div class="stat-value">{{ problem.priority || 'N/A' }}</div>
               <div class="stat-label">Priority</div>
-            </div>
+            </div>-->
             <div class="stat-item">
-              <div class="stat-value">{{ problem.assignedToName || 'Unassigned' }}</div>
+              <div class="stat-value">{{ problem.assignedToUserName || 'Unassigned' }}</div>
               <div class="stat-label">Assigned To</div>
+            </div>
+            <div class="stat-item" *ngIf="problem.azureLink">
+              <div class="stat-value">
+                <a [href]="problem.azureLink" target="_blank" rel="noopener noreferrer">Azure Link</a>
+              </div>
+              <div class="stat-label">Azure DevOps</div>
             </div>
           </div>
           <p class="problem-description">{{ problem.description || 'No description provided.' }}</p>
@@ -158,6 +167,12 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
               </svg>
+            </button>
+            <button class="action-btn secondary" (click)="attributeSolution(problem)" title="Attribute Solution" [attr.aria-label]="'Attribute solution to ' + (problem.title || 'problem')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+              Attribute Solution
             </button>
           </div>
         </footer>

@@ -492,7 +492,7 @@ public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             entity.HasOne(e => e.Project)
                 .WithMany(p => p.Problems)
                 .HasForeignKey(e => e.ProjectId)
-                .OnDelete(DeleteBehavior.Cascade); // Remove problems when project is deleted
+                    .OnDelete(DeleteBehavior.Restrict); // Prevent multiple cascade paths
                 
             entity.HasOne(e => e.CreatedByUser)
                 .WithMany(u => u.Problems)
