@@ -116,8 +116,22 @@ app.UseResponseCompression();
 
 app.UseHttpsRedirection();
 
+
+// Serve wwwroot (default)
 app.UseStaticFiles(new StaticFileOptions
 {
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=3600");
+    }
+});
+
+// Serve /uploads as static files
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+    RequestPath = "/uploads",
     OnPrepareResponse = ctx =>
     {
         ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=3600");

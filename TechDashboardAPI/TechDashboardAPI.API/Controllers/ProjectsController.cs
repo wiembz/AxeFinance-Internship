@@ -820,9 +820,9 @@ public class ProjectsController : ControllerBase
     }
 
     // Endpoint to suggest a solution (contributor/admin only, must belong to department/project)
-    [HttpPost("/api/solutions")]
+    [HttpPost("/api/projects/{projectId}/suggest-solution")]
     [Authorize(Roles = "Contributor,Admin")]
-    public async Task<IActionResult> SuggestSolution([FromBody] SuggestSolutionRequest request)
+    public async Task<IActionResult> SuggestSolution(int projectId, [FromBody] SuggestSolutionRequest request)
     {
         try
         {

@@ -188,10 +188,14 @@ export class ProblemListComponent implements OnInit {
     this.loadProblems();
   }
 
-  viewProblem(problemId: number): void {
+  viewProblem(problemId: number, projectId?: number): void {
     // Only navigate if the problemId is a valid number
     if (typeof problemId === 'number' && !isNaN(problemId) && problemId > 0) {
-      this.router.navigate(['/problems', problemId]);
+      if (typeof projectId === 'number' && !isNaN(projectId) && projectId > 0) {
+        this.router.navigate(['/admin/projects', projectId, 'problems', problemId]);
+      } else {
+        this.router.navigate(['/problems', problemId]);
+      }
     } else {
       console.warn('Invalid problem ID:', problemId);
     }

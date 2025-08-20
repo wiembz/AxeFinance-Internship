@@ -1,110 +1,149 @@
-<div class="problems-dashboard">
-  <header class="dashboard-header">
-    <div class="header-brand">
-      <div class="brand-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
-      </div>
-      <div class="brand-content">
-        <h1 class="brand-title">Problem Details</h1>
-        <p class="brand-subtitle">Full information for this problem</p>
-      </div>
-    </div>
-    <div class="header-controls">
-      <button class="secondary-action" (click)="goBack()">&larr; Back to Problems</button>
-      <button class="primary-action" *ngIf="problem" (click)="router.navigate(['/problems', problem.id, 'edit'])">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-        </svg>
-        Edit
-      </button>
-    </div>
-  </header>
-
-  <main class="problems-content">
-    <div *ngIf="loading" class="content-state loading-state">
-      <div class="state-visual">
-        <div class="loading-spinner"><div class="spinner-ring"></div></div>
-      </div>
-      <div class="state-content">
-        <h3>Loading Problem</h3>
-        <p>Please wait while we fetch the problem details...</p>
-      </div>
-    </div>
-    <div *ngIf="error && !loading" class="content-state error-state">
-      <div class="state-visual">
-        <div class="error-illustration">
-          <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
+<div class="problem-details-container">
+  <div class="problems-dashboard">
+    <header class="dashboard-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
           </svg>
         </div>
+        <div class="brand-content">
+          <h1 class="brand-title">Problem Details</h1>
+          <p class="brand-subtitle">Full information for this problem</p>
+        </div>
       </div>
-      <div class="state-content">
-        <h3>Failed to load problem</h3>
-        <p class="error-message">{{ error }}</p>
+      <div class="header-controls">
+        <button class="secondary-action" (click)="goBack()">&larr; Back to Problems</button>
+  <a class="primary-action" *ngIf="problem" [routerLink]="['/problems', problem.id, 'edit']">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </svg>
+    Edit
+  </a>
       </div>
-    </div>
-    <div *ngIf="problem && !loading && !error" class="problems-grid">
-      <article class="problem-card" style="grid-column: 1/-1;">
-        <header class="card-header">
-          <div class="problem-identity">
-            <div class="problem-avatar">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-            <div class="problem-info">
-              <h3 class="problem-name">{{ problem.title }}</h3>
-              <div class="problem-status">
-                <span class="status-indicator" [class]="'status-badge status-' + getStatusClass(problem.status)"></span>
-                <span class="status-text">{{ formatStatus(problem.status) }}</span>
-              </div>
-            </div>
-          </div>
-        </header>
-        <div class="card-body">
-          <div class="problem-stats">
-            <div class="stat-item">
-              <div class="stat-value">{{ problem.departmentName }}</div>
-              <div class="stat-label">Department</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">{{ problem.projectName }}</div>
-              <div class="stat-label">Project</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">{{ problem.createdByName }}</div>
-              <div class="stat-label">Submitted By</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">{{ problem.createdDate | date:'medium' }}</div>
-              <div class="stat-label">Created</div>
-            </div>
-          </div>
-          <p class="problem-description">{{ problem.description }}</p>
-          <div class="problem-tags" *ngIf="problem.tags && problem.tags.length">
-            <span class="tag" *ngFor="let tag of problem.tags">{{ tag }}</span>
-          </div>
-          <div class="attachments" *ngIf="problem.attachments && problem.attachments.length">
-            <h4>Attachments</h4>
-            <ul>
-              <li *ngFor="let att of problem.attachments">
-                <a [href]="att.fileUrl" target="_blank">{{ att.originalFileName }}</a>
-              </li>
-            </ul>
-          </div>
-          <div class="card-actions">
-            <button class="primary-action" (click)="router.navigate(['/solutions/attribute', problem.id])">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.4em;">
-                <path d="M19 13H5v-2h14v2z"/>
-                <path d="M12 5v14m7-7H5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Add Solution
-            </button>
+    </header>
+
+    <main class="problems-content">
+      <div *ngIf="loading" class="content-state loading-state">
+        <div class="state-visual">
+          <div class="loading-spinner"><div class="spinner-ring"></div></div>
+        </div>
+        <div class="state-content">
+          <h3>Loading Problem</h3>
+          <p>Please wait while we fetch the problem details...</p>
+        </div>
+      </div>
+      <div *ngIf="error && !loading" class="content-state error-state">
+        <div class="state-visual">
+          <div class="error-illustration">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
           </div>
         </div>
-      </article>
-    </div>
-  </main>
+        <div class="state-content">
+          <h3>Failed to load problem</h3>
+          <p class="error-message">{{ error }}</p>
+        </div>
+      </div>
+    <div *ngIf="problem && !loading && !error" class="problem-details-flex-row">
+  <div class="problem-details-main" style="flex: 5 1 0; min-width: 480px;">
+          <article class="problem-card">
+            <header class="card-header">
+              <div class="problem-identity">
+                <div class="problem-avatar">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div class="problem-info">
+                  <h3 class="problem-name">{{ problem.title }}</h3>
+                  <div class="problem-status">
+                    <span class="status-indicator" [class]="'status-badge status-' + getStatusClass(problem.status)"></span>
+                    <span class="status-text">{{ formatStatus(problem.status) }}</span>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <div class="card-body">
+              <div class="problem-stats">
+                <div class="stat-item"><div class="stat-label">Title</div><div class="stat-value">{{ problem.title }}</div></div>
+                <div class="stat-item"><div class="stat-label">Department</div><div class="stat-value">{{ problem.departmentName }}</div></div>
+                <div class="stat-item"><div class="stat-label">Project</div><div class="stat-value">{{ problem.projectName }}</div></div>
+                <div class="stat-item"><div class="stat-label">Submitted By</div><div class="stat-value">{{ problem.createdByName || problem.createdBy }}</div></div>
+                <div class="stat-item"><div class="stat-label">Created</div><div class="stat-value">{{ problem.createdDate | date:'medium' }}</div></div>
+                <div class="stat-item" *ngIf="problem.lastUpdatedDate"><div class="stat-label">Last Updated</div><div class="stat-value">{{ problem.lastUpdatedDate | date:'medium' }}</div></div>
+                <div class="stat-item" *ngIf="problem.resolvedDate"><div class="stat-label">Resolved</div><div class="stat-value">{{ problem.resolvedDate | date:'medium' }}</div></div>
+                <div class="stat-item"><div class="stat-label">Status</div><div class="stat-value">{{ formatStatus(problem.status) }}</div></div>
+                <div class="stat-item" *ngIf="problem.isActive !== undefined"><div class="stat-label">Active</div><div class="stat-value">{{ problem.isActive ? 'Active' : 'Inactive' }}</div></div>
+                <div class="stat-item" *ngIf="problem.azureLink"><div class="stat-label">Azure DevOps</div><div class="stat-value"><a [href]="problem.azureLink" target="_blank">Azure Link</a></div></div>
+                <div class="stat-item" *ngIf="problem.assignedToUserName || problem.assignedToUserId"><div class="stat-label">Assigned To</div><div class="stat-value">{{ problem.assignedToUserName || problem.assignedToUserId }}</div></div>
+                <div class="stat-item" *ngIf="problem.likeCount !== undefined"><div class="stat-label">Likes</div><div class="stat-value">{{ problem.likeCount }}</div></div>
+                <div class="stat-item" *ngIf="problem.isLikedByCurrentUser !== undefined"><div class="stat-label">Liked by You</div><div class="stat-value">{{ problem.isLikedByCurrentUser ? 'Yes' : 'No' }}</div></div>
+                <div class="stat-item" *ngIf="problem.solutionsCount !== undefined"><div class="stat-label">Solutions</div><div class="stat-value">{{ problem.solutionsCount }}</div></div>
+                <div class="stat-item" *ngIf="problem.attachmentPath"><div class="stat-label">Attachment</div><div class="stat-value"><a [href]="problem.attachmentPath" target="_blank">Download</a></div></div>
+              </div>
+              <div class="problem-description-block">
+                <h4>Description</h4>
+                <p class="problem-description">{{ problem.description }}</p>
+              </div>
+              <div class="problem-tags" *ngIf="problem.tags && problem.tags.length">
+                <span class="tag" *ngFor="let tag of problem.tags">{{ tag }}</span>
+              </div>
+              <div class="attachments" *ngIf="problem.attachments && problem.attachments.length">
+                <h4>Attachments</h4>
+                <ul>
+                  <li *ngFor="let att of problem.attachments">
+                    <a [href]="att.fileUrl" target="_blank">{{ att.originalFileName }}</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-actions">
+                <a class="primary-action" *ngIf="problem" [routerLink]="['/problems', problem.id, 'attribute-solution']">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.4em;">
+                    <path d="M19 13H5v-2h14v2z"/>
+                    <path d="M12 5v14m7-7H5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Add Solution
+                </a>
+              </div>
+
+              <div class="problem-solutions-block">
+                <h4>Solutions</h4>
+                <div *ngIf="solutionsLoading">Loading solutions...</div>
+                <div *ngIf="!solutionsLoading && solutions.length === 0">No solutions yet.</div>
+                <ul *ngIf="!solutionsLoading && solutions.length > 0">
+                  <li *ngFor="let sol of solutions" class="solution-item">
+                    <div class="solution-header">
+                      <span class="solution-user">{{ sol.userName || 'User #' + sol.userId }}</span>
+                      <span class="solution-date">{{ sol.createdDate | date:'medium' }}</span>
+                      <span class="solution-status">Status: {{ sol.status }}</span>
+                    </div>
+                    <div class="solution-content">{{ sol.content }}</div>
+                    <div *ngIf="sol.attachmentPath">
+                      <a [href]="sol.attachmentPath" target="_blank">Download Attachment</a>
+                    </div>
+                    <div *ngIf="sol.azureDevOpsLink">
+                      <a [href]="sol.azureDevOpsLink" target="_blank">Azure DevOps Link</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="problem-details-attachment-panel" *ngIf="problem.attachmentPath" style="flex: 1 1 320px; min-width: 320px; max-width: 800px;">
+          <h4>Attachment Preview</h4>
+          <ng-container [ngSwitch]="problem.attachmentPath | fileType">
+            <img *ngSwitchCase="'image'" [src]="problem.attachmentPath" alt="Attachment Image" style="max-width:100%;max-height:600px; border-radius: 8px; box-shadow: 0 2px 8px #0001;" />
+            <iframe *ngSwitchCase="'pdf'" [src]="getSafeUrl(problem.attachmentPath)" width="100%" height="600" style="border:1px solid #e3e8ee; border-radius: 8px;"></iframe>
+            <iframe *ngSwitchCase="'text'" [src]="getSafeUrl(problem.attachmentPath)" width="100%" height="600" style="border:1px solid #e3e8ee; border-radius: 8px;"></iframe>
+            <div *ngSwitchDefault>
+              <a [href]="problem.attachmentPath" target="_blank">Open Attachment</a>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>

@@ -70,6 +70,49 @@ export class ProblemService {
     }
   }
 
+
+  // Update an existing problem
+  async updateProblem(problemId: number, problemData: ProblemSubmission): Promise<ApiResponse<any>> {
+    try {
+      const formData = new FormData();
+      formData.append('Title', problemData.title);
+      formData.append('Description', problemData.description);
+      formData.append('DepartmentId', problemData.departmentId.toString());
+      if (problemData.projectId !== undefined) {
+        formData.append('ProjectId', problemData.projectId.toString());
+      }
+      if (problemData.tags && problemData.tags.length > 0) {
+        formData.append('Tags', problemData.tags.join(','));
+      }
+      if (problemData.azureLink) {
+        formData.append('AzureLink', problemData.azureLink);
+      }
+      if (problemData.assignedToUserId) {
+        formData.append('AssignedToUserId', problemData.assignedToUserId.toString());
+      }
+      if (problemData.attachments && problemData.attachments.length > 0) {
+        // For now, only send the first attachment since the backend expects single file
+        const attachment = problemData.attachments[0];
+        if (attachment instanceof File) {
+          formData.append('Attachment', attachment);
+        }
+      }
+      const response = await this.http.put<ApiResponse<any>>(
+        `${this.apiUrl}/${problemId}`,
+        formData
+      ).toPromise();
+      return response!;
+    } catch (error: any) {
+      console.error('Error updating problem:', error);
+      throw {
+        success: false,
+        message: error.message || 'Failed to update problem',
+        data: null,
+        errors: error.errors || []
+      };
+    }
+  }
+
   // Get problems with pagination and filtering
   getProblems(
     page: number = 1,

@@ -6,7 +6,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DepartmentListItem } from '../../../shared/models/department.model';
 import { ProblemSubmission, ProblemTag } from '../../../shared/models/problem.model';
 import { ProjectListItem } from '../../../shared/models/project.model';
@@ -34,12 +34,16 @@ export class ProblemSubmitComponent implements OnInit {
   success = '';
   error = '';
 
+  isEditMode = false;
+  problemId: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private problemService: ProblemService,
     private departmentService: DepartmentService,
     private projectService: ProjectService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -49,10 +53,53 @@ export class ProblemSubmitComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeForm();
-    this.loadDepartments();
-    this.loadProjects();
-    this.loadPopularTags();
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.problemId = +params['id'];
+        this.initializeForm();
+        this.loadDepartments();
+        this.loadProjects();
+        this.loadPopularTags();
+        this.loadProblem();
+      } else {
+        this.isEditMode = false;
+        this.problemId = null;
+        this.initializeForm();
+        this.loadDepartments();
+        this.loadProjects();
+        this.loadPopularTags();
+      }
+    });
+  }
+
+  private loadProblem(): void {
+    if (!this.problemId) return;
+    this.loading = true;
+    this.problemService.getProblemById(this.problemId).subscribe({
+      next: (response) => {
+        const problem = response.data;
+        if (problem) {
+          this.problemForm.patchValue({
+            title: problem.title,
+            description: problem.description,
+            departmentId: problem.departmentId,
+            projectId: problem.projectId,
+            tags: Array.isArray(problem.tags) ? problem.tags.join(', ') : (problem.tags || ''),
+            azureLink: problem.azureLink || '',
+            assignedToUserId: problem.assignedToUserId ? problem.assignedToUserId.toString() : ''
+          });
+          // If there are tags, update the tagsArray
+          // File attachments: for edit, do not pre-load file, just show download link if needed (not implemented here)
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.error = error.message || 'Failed to load problem';
+        this.loading = false;
+      }
+    });
   }
 
   private initializeForm(): void {
@@ -176,21 +223,32 @@ export class ProblemSubmitComponent implements OnInit {
           assignedToUserId: formValue.assignedToUserId ? parseInt(formValue.assignedToUserId) : undefined,
           attachments: this.selectedFile ? [this.selectedFile] : []
         };
-        const response = await this.problemService.createProblem(problemSubmission);
-        if (response.success) {
-          this.success = 'Problem submitted successfully!';
-          this.submitting = false;
-          setTimeout(() => {
-            // Always redirect to admin project problem list after creation
-            if (problemSubmission.projectId) {
-              this.router.navigate([`/admin/projects/${problemSubmission.projectId}/problems`]);
-            } else {
-              this.router.navigate(['/problems']);
-            }
-          }, 2000);
+        if (this.isEditMode && this.problemId) {
+          // Update problem (implement updateProblem in ProblemService)
+          const response = await this.problemService.updateProblem(this.problemId, problemSubmission);
+          if (response.success) {
+            this.success = 'Problem updated successfully!';
+            this.submitting = false;
+            setTimeout(() => {
+              this.router.navigate(['/problems', this.problemId]);
+            }, 1200);
+          } else {
+            this.error = response.message || 'Failed to update problem. Please try again.';
+            this.submitting = false;
+          }
         } else {
-          this.error = response.message || 'Failed to submit problem. Please try again.';
-          this.submitting = false;
+          // Create new problem
+          const response = await this.problemService.createProblem(problemSubmission);
+          if (response.success && response.data && response.data.id) {
+            this.success = 'Problem submitted successfully!';
+            this.submitting = false;
+            setTimeout(() => {
+              this.router.navigate(['/problems', response.data.id]);
+            }, 1200);
+          } else {
+            this.error = response.message || 'Failed to submit problem. Please try again.';
+            this.submitting = false;
+          }
         }
       } catch (error: any) {
         this.error = error.message || 'Failed to submit problem. Please try again.';

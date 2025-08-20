@@ -57,6 +57,10 @@ export const routes: Routes = [
           {
             path: 'projects/:projectId/problems',
             loadComponent: () => import('./features/problems/problem-list/problem-list.component').then(m => m.ProblemListComponent)
+          },
+          {
+            path: 'projects/:projectId/problems/:problemId',
+            loadComponent: () => import('./features/problems/problem-details/problem-details.component').then(m => m.ProblemDetailsComponent)
           }
         ]
       },
@@ -68,13 +72,21 @@ export const routes: Routes = [
             path: '',
             loadComponent: () => import('./features/problems/problem-list/problem-list.component').then(m => m.ProblemListComponent)
           },
-         /* {
-            path: ':id',
-            loadComponent: () => import('./features/problems/problem-details/problem-details.component').then(m => m.ProblemDetailsComponent)
-          },*/
           {
             path: 'submit',
             loadComponent: () => import('./features/problems/problem-submit/problem-submit.component').then(m => m.ProblemSubmitComponent)
+          },
+          {
+            path: ':id/edit',
+            loadComponent: () => import('./features/problems/problem-submit/problem-submit.component').then(m => m.ProblemSubmitComponent)
+          },
+          {
+            path: ':id/attribute-solution',
+            loadComponent: () => import('./features/solutions/solution-attribute.component').then(m => m.SolutionAttributeComponent)
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./features/problems/problem-details/problem-details.component').then(m => m.ProblemDetailsComponent)
           },
           {
             path: 'project/:projectId',

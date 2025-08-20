@@ -1,0 +1,39 @@
+<div class="solution-attribute-container">
+  <div class="solution-card">
+    <header class="card-header">
+      <h2>Attribute Solution</h2>
+      <p class="subtitle">Provide a solution for this problem</p>
+    </header>
+    <form [formGroup]="solutionForm" (ngSubmit)="submit()" enctype="multipart/form-data" novalidate>
+      <div class="form-group">
+        <label for="title">Title <span class="required">*</span></label>
+        <input id="title" type="text" formControlName="title" maxlength="100" [class.invalid]="solutionForm.get('title')?.invalid && solutionForm.get('title')?.touched">
+        <div class="error-message" *ngIf="solutionForm.get('title')?.invalid && solutionForm.get('title')?.touched">
+          Title is required (max 100 chars).
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description">Description <span class="required">*</span></label>
+        <textarea id="description" formControlName="description" rows="5" maxlength="2000" [class.invalid]="solutionForm.get('description')?.invalid && solutionForm.get('description')?.touched"></textarea>
+        <div class="error-message" *ngIf="solutionForm.get('description')?.invalid && solutionForm.get('description')?.touched">
+          Description is required (max 2000 chars).
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="attachment">Attachment</label>
+        <input id="attachment" type="file" (change)="onFileChange($event)" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx,.xls,.xlsx,.csv">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="primary-action" [disabled]="loading || !solutionForm.valid">
+          <span *ngIf="loading" class="spinner"></span>
+          Attribute Solution
+        </button>
+        <button type="button" class="secondary-action" (click)="router.navigate(['/problems', problemId])" [disabled]="loading">Cancel</button>
+      </div>
+      <div class="form-feedback">
+        <div class="success-message" *ngIf="success">Solution attributed successfully!</div>
+        <div class="error-message" *ngIf="error">{{ error }}</div>
+      </div>
+    </form>
+  </div>
+</div>

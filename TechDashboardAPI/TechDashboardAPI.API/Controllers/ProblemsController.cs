@@ -409,6 +409,7 @@ public class ProblemsController : ControllerBase
                 CanEdit = canEdit,
                 CanDelete = canDelete,
                 HasAttachment = !string.IsNullOrEmpty(problem.AttachmentPath),
+                Status = problem.Status.ToString(),
                 Solutions = problem.Solutions.Select(s => new SolutionSummaryDto
                 {
                     Id = s.Id,
@@ -1274,12 +1275,11 @@ public class TagsResponseDto
 
 public class ProblemDetailDto : ProblemSummaryDto
 {
-
     public new string Description { get; set; } = string.Empty;
 
+    public string Status { get; set; } = string.Empty;
 
     public List<SolutionSummaryDto> Solutions { get; set; } = new();
-
 
     public bool CanDelete { get; set; }
 }
